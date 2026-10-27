@@ -1,0 +1,3115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>🔮 長庚科技大學 | 專科護理師甄審命題參考書籍借閱平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        cgust: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', '"Noto Sans TC"', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cgust-600 selection:text-white pb-20 md:pb-0">
+
+    <!-- ==================== STAFF PREVIEW MODE FLOATING BAR ==================== -->
+    <div id="staffPreviewBanner" class="hidden sticky top-0 z-40 bg-indigo-950 text-white px-4 py-2.5 shadow-md border-b border-indigo-700">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 font-medium text-center sm:text-left">
+                <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-bold shrink-0">👁️ 子網頁預覽</span>
+                <span>目前正在預覽「<strong>命題委員子網頁</strong>」，可實際體驗手機與電腦版檢索、加入借閱清單與操作指南。</span>
+            </div>
+            <button onclick="window.toggleStaffPreviewMode(false)" class="w-full sm:w-auto justify-center shrink-0 bg-white hover:bg-indigo-50 text-indigo-950 font-bold px-3.5 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                <i class="ph-bold ph-arrow-u-up-left"></i>
+                <span>返回後台子網頁</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== SUB-PAGE 1: COMMITTEE MEMBER PORTAL (命題委員子網頁) ==================== -->
+    <div id="committeePortalWrapper" class="hidden flex-1 flex-col">
+        <!-- Committee Sticky Header -->
+        <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-orange-200/80 shadow-sm">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 cursor-pointer min-w-0" onclick="window.switchMemberTab('catalog')">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-br from-cgust-600 to-amber-500 flex items-center justify-center text-white text-lg sm:text-xl shadow-md shadow-cgust-500/20">
+                        🔮
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <h1 class="text-sm sm:text-lg font-bold tracking-tight text-slate-900 truncate">專科護理師甄審命題參考書籍借閱平台</h1>
+                            <span class="hidden lg:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 shrink-0">
+                                🩺 命題委員專區
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 hidden sm:block truncate">長庚科技大學 專科護理師甄審計畫 ｜ 命題參考用書線上選書與寄送申請</p>
+                    </div>
+                </div>
+
+                <!-- Committee Right Controls: Borrow List & Member Info -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="window.openCartModal()" class="relative px-3 py-2 text-slate-700 hover:text-cgust-700 hover:bg-cgust-50 rounded-xl transition-all flex items-center gap-1.5 border border-cgust-200 bg-cgust-50/70 active:scale-95">
+                        <i class="ph-bold ph-list-checks text-lg text-cgust-600"></i>
+                        <span class="text-xs font-bold text-cgust-800 hidden xs:inline sm:inline">借閱清單</span>
+                        <span id="memberCartBadge" class="w-5 h-5 rounded-full bg-cgust-600 text-white text-[11px] font-bold flex items-center justify-center shadow-sm">0</span>
+                    </button>
+                    <div id="memberAuthArea" class="flex items-center gap-1.5"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Committee Main Content -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
+            <!-- Desktop/Tablet Top Navigation Bar (Hidden on Mobile, replaced by Mobile Bottom Nav) -->
+            <div class="hidden md:flex items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button id="mTabCatalog" onclick="window.switchMemberTab('catalog')" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-cgust-600 text-white shadow-sm shadow-cgust-500/20">
+                        <i class="ph-bold ph-books text-lg"></i>
+                        <span>館藏書庫與編號檢索</span>
+                        <span id="memberCatalogCountBadge" class="px-2 py-0.5 text-xs rounded-full bg-cgust-700 text-white">0</span>
+                    </button>
+                    <button id="mTabMyBorrows" onclick="window.switchMemberTab('my-borrows')" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 text-slate-600 hover:bg-slate-200/70">
+                        <i class="ph-bold ph-package text-lg"></i>
+                        <span>我的借閱紀錄與追蹤</span>
+                        <span id="memberBorrowCountBadge" class="px-2 py-0.5 text-xs rounded-full bg-slate-200 text-slate-700">0</span>
+                    </button>
+                    <button id="mTabRecommend" onclick="window.switchMemberTab('recommend')" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 text-slate-600 hover:bg-slate-200/70">
+                        <i class="ph-bold ph-chat-teardrop-text text-lg text-cgust-600"></i>
+                        <span>委員好書推薦</span>
+                    </button>
+                    <button id="mTabManual" onclick="window.switchMemberTab('manual')" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 text-slate-600 hover:bg-slate-200/70">
+                        <i class="ph-bold ph-compass text-lg text-amber-600"></i>
+                        <span>📖 操作指南</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MEMBER VIEW 1: BOOK CATALOG -->
+            <section id="mViewCatalog" class="space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-sm border border-slate-200/90 space-y-3.5">
+                    <div class="grid grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3">
+                        <div class="col-span-2 lg:col-span-4 relative">
+                            <i class="ph ph-magnifying-glass text-slate-400 text-lg absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                oninput="window.handleFilterChange()"
+                                placeholder="搜尋書籍編號、書名、作者、ISBN或標籤..."
+                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500 transition-all"
+                            >
+                            <button id="clearSearchBtn" onclick="window.clearSearchFilters()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <i class="ph-fill ph-x-circle text-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="col-span-1 lg:col-span-2">
+                            <select id="specialtySelect" onchange="window.handleFilterChange()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                                <option value="ALL">🩺 所有科別</option>
+                                <option value="通論">📖 通論</option>
+                                <option value="內科">🫀 內科</option>
+                                <option value="外科">🔪 外科</option>
+                                <option value="麻醉科">💉 麻醉科</option>
+                                <option value="兒科">👶 兒科</option>
+                                <option value="精神科">🧠 精神科</option>
+                                <option value="婦產科">🤰 婦產科</option>
+                                <option value="家庭科">👨‍👩‍👧 家庭科</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-1 lg:col-span-2">
+                            <select id="langTypeSelect" onchange="window.handleFilterChange()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                                <option value="ALL">🌐 所有語系</option>
+                                <option value="中文">🇹🇼 中文</option>
+                                <option value="西文">🌍 西文</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-1 lg:col-span-2">
+                            <select id="refSelect" onchange="window.handleFilterChange()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                                <option value="ALL">📌 所有參考類型</option>
+                                <option value="true">⭐ 公告參考書籍</option>
+                                <option value="false">📚 一般命題參考</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-1 lg:col-span-2 flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                            <button onclick="window.setStatusFilter('ALL')" id="statusPillALL" class="flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all bg-white text-cgust-600 shadow-sm">
+                                全部
+                            </button>
+                            <button onclick="window.setStatusFilter('AVAILABLE')" id="statusPillAVAILABLE" class="flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
+                                可借閱
+                            </button>
+                            <button onclick="window.setStatusFilter('BORROWED')" id="statusPillBORROWED" class="flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
+                                借出中
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pt-1 gap-2">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-xs font-medium text-slate-400 flex items-center gap-1">
+                                <i class="ph-fill ph-sparkle text-cgust-500"></i> 快速檢索：
+                            </span>
+                            <div id="popularTagsContainer" class="flex items-center gap-1.5 flex-wrap"></div>
+                        </div>
+                        <div class="text-xs text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 flex items-center gap-1.5 font-medium">
+                            <i class="ph-fill ph-clock-countdown text-amber-600 text-base shrink-0"></i>
+                            <span id="cartRetentionHint">提醒：借閱清單於登出後將為您保留 5 天，逾期未送出將自動釋出名額。</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member Books Grid -->
+                <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+
+                <div id="catalogEmptyState" class="hidden bg-white rounded-2xl border border-dashed border-slate-300 p-8 sm:p-12 text-center max-w-lg mx-auto my-6">
+                    <div class="w-14 h-14 rounded-2xl bg-cgust-50 text-cgust-600 flex items-center justify-center mx-auto mb-3 text-2xl">
+                        🔍
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-1.5">查無相符的命題參考書籍</h3>
+                    <p id="emptyStateText" class="text-xs sm:text-sm text-slate-500 mb-5">未找到相關書籍編號或版本，請嘗試變更過濾條件。</p>
+                    <button onclick="window.clearSearchFilters()" class="px-4 py-2.5 bg-cgust-600 hover:bg-cgust-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all">
+                        清除所有篩選條件
+                    </button>
+                </div>
+            </section>
+
+            <!-- MEMBER VIEW 2: PERSONAL BORROW RECORDS ONLY -->
+            <section id="mViewMyBorrows" class="hidden space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <i class="ph-fill ph-package text-cgust-600 text-xl"></i>
+                                <span>我的命題參考書借閱紀錄與寄送追蹤</span>
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">提醒命題繳交期限：請務必於 <strong class="text-rose-600">116年7月15日前</strong> 寄回長庚科技大學 葉欣儒助理收。</p>
+                        </div>
+                        <div class="flex items-center gap-3 self-start sm:self-auto">
+                            <div class="px-3.5 py-2 rounded-xl bg-cgust-50 border border-cgust-200 text-xs">
+                                <span class="text-slate-600">目前借閱 / 處理中：</span>
+                                <strong id="myActiveCount" class="text-cgust-700 text-sm">0</strong> 本
+                            </div>
+                        </div>
+                    </div>
+                    <div id="myBorrowsList" class="divide-y divide-slate-100 mt-2"></div>
+                </div>
+            </section>
+
+            <!-- MEMBER VIEW 3: MEMBER BOOK RECOMMENDATION -->
+            <section id="mViewRecommend" class="hidden space-y-4 sm:space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                            <div class="w-10 h-10 rounded-xl bg-cgust-50 text-cgust-600 flex items-center justify-center text-xl shrink-0">
+                                <i class="ph-bold ph-chat-teardrop-text"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">命題委員推薦新書登記</h2>
+                                <p class="text-xs text-slate-500">若館藏缺少最新出版之版次或建議增購命題用書，請於此填寫提交</p>
+                            </div>
+                        </div>
+                        <form onsubmit="window.handleRecommendSubmit(event)" class="space-y-3.5">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">推薦書名 <span class="text-rose-500">*</span></label>
+                                <input type="text" id="recTitle" required placeholder="例如：Harrison's Principles of Internal Medicine 22e" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-cgust-500">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">作者 / 編者 <span class="text-rose-500">*</span></label>
+                                    <input type="text" id="recAuthor" required placeholder="作者姓名" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">ISBN (選填)</label>
+                                    <input type="text" id="recIsbn" placeholder="978-986-..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">適用科別</label>
+                                    <select id="recSpecialty" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm bg-white">
+                                        <option value="通論">📖 通論</option>
+                                        <option value="內科">🫀 內科</option>
+                                        <option value="外科">🔪 外科</option>
+                                        <option value="麻醉科">💉 麻醉科</option>
+                                        <option value="兒科">👶 兒科</option>
+                                        <option value="精神科">🧠 精神科</option>
+                                        <option value="婦產科">🤰 婦產科</option>
+                                        <option value="家庭科">👨‍👩‍👧 家庭科</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">語言類別</label>
+                                    <select id="recLang" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm bg-white">
+                                        <option value="中文">🇹🇼 中文</option>
+                                        <option value="西文">🌍 西文</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">推薦理由與建議版次 <span class="text-rose-500">*</span></label>
+                                <textarea id="recReason" rows="3" required placeholder="請說明推薦原因、是否建議列為公告參考書籍..." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-cgust-600 hover:bg-cgust-700 text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5">
+                                <i class="ph-bold ph-paper-plane-tilt"></i>
+                                <span>送出我的推薦書單</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2">
+                                <i class="ph-fill ph-clock-counter-clockwise text-cgust-600 text-xl"></i>
+                                <h2 class="text-base font-bold text-slate-900">我曾提交的好書推薦紀錄</h2>
+                            </div>
+                            <span class="text-xs text-slate-400">僅顯示您本人的推薦</span>
+                        </div>
+                        <div id="memberMyRecommendationsList" class="space-y-3 max-h-[460px] overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MEMBER VIEW 4: COMMITTEE INTERACTIVE GUIDE -->
+            <section id="mViewManual" class="hidden space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-5 sm:p-8 shadow-sm border border-slate-200 space-y-6 max-w-5xl mx-auto">
+                    <div class="border-b border-slate-200 pb-4 flex items-center gap-3.5">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl shadow-sm shrink-0">
+                            <i class="ph-duotone ph-compass"></i>
+                        </div>
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">🩺 命題委員線上操作指南</span>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">專科護理師甄審命題參考書籍借閱平台 — 線上操作指南</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">支援手機、平板、筆電與桌上型電腦直接檢索借閱，以下為完整選書與歸還說明</p>
+                        </div>
+                    </div>
+                    <div id="memberManualContentBody" class="space-y-6"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Committee Mobile Bottom Navigation Bar (Visible ONLY on Mobile < 768px) -->
+        <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg grid grid-cols-4 py-1.5 px-2">
+            <button id="mMobTabCatalog" onclick="window.switchMemberTab('catalog')" class="flex flex-col items-center justify-center py-1 rounded-xl text-cgust-600 font-bold">
+                <i class="ph-bold ph-books text-xl"></i>
+                <span class="text-[11px] mt-0.5">館藏書庫</span>
+            </button>
+            <button id="mMobTabMyBorrows" onclick="window.switchMemberTab('my-borrows')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-500 font-medium">
+                <i class="ph-bold ph-package text-xl"></i>
+                <span class="text-[11px] mt-0.5">我的借閱</span>
+            </button>
+            <button id="mMobTabRecommend" onclick="window.switchMemberTab('recommend')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-500 font-medium">
+                <i class="ph-bold ph-chat-teardrop-text text-xl"></i>
+                <span class="text-[11px] mt-0.5">好書推薦</span>
+            </button>
+            <button id="mMobTabManual" onclick="window.switchMemberTab('manual')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-500 font-medium">
+                <i class="ph-bold ph-compass text-xl"></i>
+                <span class="text-[11px] mt-0.5">操作指南</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ==================== SUB-PAGE 2 & 3: STAFF BACKEND PORTALS ==================== -->
+    <div id="staffBackendWrapper" class="hidden flex-1 flex-col bg-slate-100/80">
+        <!-- Staff Dark Sticky Header -->
+        <header class="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-md">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 cursor-pointer min-w-0" onclick="window.switchStaffTab('orders')">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-cgust-500 flex items-center justify-center text-white text-lg sm:text-xl shadow-md">
+                        🔮
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h1 id="staffPortalHeaderTitle" class="text-sm sm:text-lg font-bold tracking-tight text-white truncate">專師甄審書庫 — 後台管理子系統</h1>
+                            <span id="staffHeaderRoleBadge" class="shrink-0"></span>
+                        </div>
+                        <p id="staffPortalSubTitle" class="text-[11px] text-slate-400 hidden sm:block truncate">委員借閱訂單裝箱寄送、全部書籍單冊狀態、館藏建檔與對帳盤點工作台</p>
+                    </div>
+                </div>
+
+                <!-- Staff Right Controls -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="window.toggleStaffPreviewMode(true)" class="px-2.5 sm:px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+                        <i class="ph-bold ph-eye text-sm"></i>
+                        <span class="hidden sm:inline">預覽命題委員介面</span>
+                        <span class="sm:hidden">預覽前台</span>
+                    </button>
+                    <div id="staffAuthArea" class="flex items-center gap-1.5"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Staff Main Workspace -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
+            <!-- Top KPI Summary Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div onclick="window.switchStaffTab('all-books')" class="cursor-pointer bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-400 transition-all flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">總採購冊數 / 在庫可借</p>
+                        <p class="text-base sm:text-xl font-bold text-slate-900 mt-1"><span id="kpiTotalCopies">0</span> 冊 <span class="text-xs font-normal text-slate-400">/</span> <span id="kpiAvailableCopies" class="text-emerald-600">0</span> 在庫</p>
+                    </div>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg sm:text-xl shrink-0"><i class="ph-bold ph-books"></i></div>
+                </div>
+                <div onclick="window.switchStaffTab('orders')" class="cursor-pointer bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm hover:border-amber-400 transition-all flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">📦 待寄包裹 / 🚚 借出中</p>
+                        <p class="text-base sm:text-xl font-bold text-amber-600 mt-1"><span id="kpiPendingShip">0</span> 待寄 <span class="text-xs font-normal text-slate-400">/</span> <span id="kpiActiveBorrows" class="text-blue-600">0</span> 借出</p>
+                    </div>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl shrink-0"><i class="ph-bold ph-truck"></i></div>
+                </div>
+                <div onclick="window.switchStaffTab('audit')" class="cursor-pointer bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-400 transition-all flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">✅ 待歸檔 / ⚠️ 遺失冊數</p>
+                        <p class="text-base sm:text-xl font-bold text-emerald-600 mt-1"><span id="kpiReturnedWaitArchive">0</span> 待歸檔 <span class="text-xs font-normal text-slate-400">/</span> <span id="kpiLostCopies" class="text-rose-600">0</span> 遺失</p>
+                    </div>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg sm:text-xl shrink-0"><i class="ph-bold ph-clipboard-text"></i></div>
+                </div>
+                <div onclick="window.switchStaffTab('all-books')" class="cursor-pointer bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm hover:border-cgust-400 transition-all flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">⭐ 官方公告參考書數</p>
+                        <p class="text-base sm:text-xl font-bold text-amber-600 mt-1"><span id="kpiOfficialRefCount">0</span> 本</p>
+                    </div>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cgust-50 text-cgust-600 flex items-center justify-center text-lg sm:text-xl shrink-0"><i class="ph-fill ph-star"></i></div>
+                </div>
+            </div>
+
+            <!-- Staff Backend Sub-Navigation Bar (5 Independent Tabs for Administrative Cleanliness) -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-300 pb-3">
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+                    <button id="sTabOrders" onclick="window.switchStaffTab('orders')" class="shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 bg-slate-900 text-white shadow-sm">
+                        <i class="ph-bold ph-users-four text-base text-amber-400"></i>
+                        <span>① 委員借閱訂單總表</span>
+                    </button>
+                    <button id="sTabAllBooks" onclick="window.switchStaffTab('all-books')" class="shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 text-slate-700 hover:bg-slate-200">
+                        <i class="ph-bold ph-books text-base text-indigo-600"></i>
+                        <span>② 全部書籍清單 (單冊狀態)</span>
+                    </button>
+                    <button id="sTabCatalogEntry" onclick="window.switchStaffTab('catalog-entry')" class="shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 text-slate-700 hover:bg-slate-200">
+                        <i class="ph-bold ph-database text-base text-violet-600"></i>
+                        <span>③ 館藏書庫建檔</span>
+                    </button>
+                    <button id="sTabAudit" onclick="window.switchStaffTab('audit')" class="shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 text-slate-700 hover:bg-slate-200">
+                        <i class="ph-bold ph-clipboard-text text-base text-emerald-600"></i>
+                        <span>④ 對帳盤點</span>
+                    </button>
+                    <button id="sTabManual" onclick="window.switchStaffTab('manual')" class="shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 text-slate-700 hover:bg-slate-200">
+                        <i class="ph-bold ph-compass text-base text-cgust-600"></i>
+                        <span id="staffManualTabText">⑤ 操作指南</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STAFF VIEW 1: BORROWER ORDERS MASTER-DETAIL WORKBENCH -->
+            <section id="sViewOrders" class="space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                                <i class="ph-bold ph-users-four"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm sm:text-base font-bold text-slate-900">命題委員借閱訂單總表（依借閱人展開圖書編號與明細）</h2>
+                                <p class="text-xs text-slate-500">點擊委員列即可展開其借閱之「自編書籍編號 + 書名 + 資產編號」，辦理裝箱寄出、歸還點收或結案歸檔</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <select id="adminRecordFilter" onchange="window.renderStaffOrdersView()" class="flex-1 sm:flex-none px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700">
+                                <option value="ALL">👥 全部借閱委員訂單</option>
+                                <option value="PENDING_SHIP">📦 含有「待寄出包裹」之委員</option>
+                                <option value="ACTIVE">🚚 含有「已寄出借閱中」之委員</option>
+                                <option value="RETURNED">✅ 含有「已點收待歸檔」之委員</option>
+                                <option value="ARCHIVED">🗄️ 含有「已封存歸檔」之委員</option>
+                            </select>
+                            <button onclick="window.exportAllBorrowsCsv()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm flex items-center gap-1.5">
+                                <i class="ph-bold ph-file-csv text-sm"></i>
+                                <span>匯出總表 (CSV)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="adminBorrowRecordsList" class="space-y-3"></div>
+                </div>
+            </section>
+
+            <!-- STAFF VIEW 2: ALL BOOKS LIST & PER-COPY STATUS -->
+            <section id="sViewAllBooks" class="hidden space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl sm:text-2xl shrink-0">
+                                <i class="ph-bold ph-books"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm sm:text-base font-bold text-slate-900">全部書籍清單與單冊資產狀態總覽（點擊任一書籍可查看每冊資產編號與借閱人）</h2>
+                                <p class="text-xs text-slate-500">顯示自編書籍編號、書名、各冊資產編號狀態（在庫 / 借出給哪位委員 / 遺失），點擊卡片或「查看單冊狀態」即可檢視與管理</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                            <input type="text" id="allBooksSearchInput" oninput="window.renderStaffAllBooksView()" placeholder="搜尋自編編號、資產編號、書名或借閱人..." class="px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:w-64">
+                            <select id="allBooksSpecialtyFilter" onchange="window.renderStaffAllBooksView()" class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700">
+                                <option value="ALL">所有科別</option>
+                                <option value="通論">通論</option>
+                                <option value="內科">內科</option>
+                                <option value="外科">外科</option>
+                                <option value="麻醉科">麻醉科</option>
+                                <option value="兒科">兒科</option>
+                                <option value="精神科">精神科</option>
+                                <option value="婦產科">婦產科</option>
+                                <option value="家庭科">家庭科</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="staffAllBooksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </section>
+
+            <!-- STAFF VIEW 3: INDEPENDENT CATALOG ENTRY -->
+            <section id="sViewCatalogEntry" class="hidden space-y-4 sm:space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center text-xl shrink-0">
+                                    <i class="ph-bold ph-database"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">批次 CSV 重新編號匯入建檔工具</h2>
+                                    <p class="text-xs text-slate-500">支援連同「自編書籍編號」與採購冊數一鍵匯入，系統將自動生成對應之單冊資產編號</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                    CSV 欄位格式：<code class="text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded break-all">自編書籍編號, 書名, 作者, 科別, 語系(中文/西文), 版本, 採購總數, ISBN, 公告參考(true/false)</code>
+                                </label>
+                                <textarea id="bulkCsvInput" rows="6" placeholder="NP-ER-001,急症與重症護理學,胡勝川等,外科,中文,第6版,4,978-986-194-711-2,true&#10;NP-GN-002,Bates' Guide to Physical Examination,Lynn S. Bickley,通論,西文,13th Edition,3,978-1-4963-9817-8,true" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <button onclick="window.handleBulkImport()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+                                    <i class="ph-bold ph-upload"></i>
+                                    <span>執行批次匯入與自動編碼</span>
+                                </button>
+                                <button onclick="window.loadSampleCsvTemplate()" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5">
+                                    <i class="ph-bold ph-file-text"></i>
+                                    <span>載入含書籍編號之 CSV 範本</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl shrink-0">
+                                    <i class="ph-bold ph-sparkle"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">單本 AI 智慧建檔與編號登錄</h2>
+                                    <p class="text-xs text-slate-500">手動輸入自編書籍編號、資產編號字首與書名，並由 Gemini AI 自動生成命題重點摘要</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-600 space-y-2 leading-relaxed">
+                                <p class="font-bold text-slate-800">💡 重新編號與單冊資產追蹤規則說明：</p>
+                                <p>1. <strong>自編書籍編號（Book Code）</strong>：例如 <code class="bg-white px-1.5 py-0.5 rounded border">NP-IN-001</code>，代表同一個書名與版次的統一編號，後續借閱清單與訂單皆會顯示「<strong class="text-indigo-700">[書籍編號] 書名</strong>」。</p>
+                                <p>2. <strong>單冊資產編號（Asset ID）</strong>：若同一種書採購 5 本，系統會自動為每一本建立獨立的單冊編號（例如 <code class="bg-white px-1.5 py-0.5 rounded border">NP-IN-001-C1</code> ~ <code class="bg-white px-1.5 py-0.5 rounded border">C5</code> 及學校資產編號），方便點擊查看每一本是「在庫」、「借給哪位委員」或「遺失」。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                            <button onclick="window.seedDemoData()" class="px-3.5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-xs font-semibold text-slate-600">
+                                重置預設範例館藏
+                            </button>
+                            <button onclick="window.openBookModal()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm flex items-center gap-1.5">
+                                <i class="ph-bold ph-plus-circle text-base"></i>
+                                <span>開啟單本書籍建檔視窗</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAFF VIEW 4: INDEPENDENT RECONCILIATION AUDIT -->
+            <section id="sViewAudit" class="hidden space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                                <i class="ph-bold ph-clipboard-text"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm sm:text-base font-bold text-slate-900">館藏採購總數 vs 實際在庫對帳盤點表</h2>
+                                <p class="text-xs text-slate-500">清楚比對每種書籍編號之「採購總冊數」、「在庫數」、「借出中（含借閱人）」與「遺失數」，點擊單書可直接核對每冊資產編號</p>
+                            </div>
+                        </div>
+                        <input type="text" id="staffInventorySearch" oninput="window.renderStaffInventoryView()" placeholder="搜尋書籍編號、書名或 ISBN..." class="px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:w-64">
+                    </div>
+                    <div id="inventoryAuditList" class="space-y-2.5"></div>
+                </div>
+            </section>
+
+            <!-- STAFF VIEW 5: ROLE-SPECIFIC BACKEND INTERACTIVE GUIDE -->
+            <section id="sViewManual" class="hidden space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-2xl p-5 sm:p-8 shadow-sm border border-slate-200 space-y-6 max-w-5xl mx-auto">
+                    <div class="border-b border-slate-200 pb-4 flex items-center gap-3.5">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl shadow-sm shrink-0">
+                            <i class="ph-duotone ph-compass"></i>
+                        </div>
+                        <div>
+                            <span id="staffManualRoleBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-300">後台人員操作指南</span>
+                            <h2 id="staffManualMainTitle" class="text-lg sm:text-xl font-bold text-slate-900 mt-1">專科護理師甄審書庫系統 — 線上操作指南</h2>
+                            <p id="staffManualSubTitle" class="text-xs text-slate-500 mt-0.5">直接於網頁上檢視各模組標準作業流程</p>
+                        </div>
+                    </div>
+                    <div id="staffManualDynamicBody" class="space-y-6"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Staff Mobile Bottom Navigation Bar (Visible ONLY on Mobile < 768px) -->
+        <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-slate-900 text-slate-300 border-t border-slate-800 shadow-lg grid grid-cols-5 py-1.5 px-1">
+            <button id="sMobTabOrders" onclick="window.switchStaffTab('orders')" class="flex flex-col items-center justify-center py-1 rounded-xl text-amber-400 font-bold">
+                <i class="ph-bold ph-users-four text-lg"></i>
+                <span class="text-[10px] mt-0.5">訂單總表</span>
+            </button>
+            <button id="sMobTabAllBooks" onclick="window.switchStaffTab('all-books')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium">
+                <i class="ph-bold ph-books text-lg"></i>
+                <span class="text-[10px] mt-0.5">全部書籍</span>
+            </button>
+            <button id="sMobTabCatalogEntry" onclick="window.switchStaffTab('catalog-entry')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium">
+                <i class="ph-bold ph-database text-lg"></i>
+                <span class="text-[10px] mt-0.5">書庫建檔</span>
+            </button>
+            <button id="sMobTabAudit" onclick="window.switchStaffTab('audit')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium">
+                <i class="ph-bold ph-clipboard-text text-lg"></i>
+                <span class="text-[10px] mt-0.5">對帳盤點</span>
+            </button>
+            <button id="sMobTabManual" onclick="window.switchStaffTab('manual')" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium">
+                <i class="ph-bold ph-compass text-lg"></i>
+                <span class="text-[10px] mt-0.5">操作指南</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ==================== ENTRY LOGIN PORTAL ==================== -->
+    <div id="loginGateOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/85 backdrop-blur-md p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-auto space-y-5">
+            <div class="text-center space-y-2.5">
+                <div onclick="window.handleSecretLogoClick()" title="專科護理師甄審命題參考書籍借閱平台" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cgust-600 to-amber-500 text-white flex items-center justify-center text-3xl mx-auto shadow-lg shadow-cgust-500/30 select-none cursor-pointer active:scale-95 transition-transform">
+                    🔮
+                </div>
+                <div class="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-cgust-600 text-white shadow-sm">
+                    專科護理師甄審命題參考書籍借閱平台
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium">
+                    請輸入E-mail 與 Password登入
+                </p>
+            </div>
+
+            <form onsubmit="window.handleCommitteeLogin(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">選擇進入子網頁身分</label>
+                    <select id="loginRoleSelect" onchange="window.syncLoginPresetByRole()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                        <option value="member">命題委員</option>
+                        <option value="assistant">行政人員</option>
+                        <option value="colleague">管理員</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">E-mail <span class="text-rose-500">*</span></label>
+                    <input type="email" id="loginEmailInput" required value="committee@cgust.edu.tw" placeholder="請輸入 E-mail" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password (NP+身分證末四碼) <span class="text-rose-500">*</span></label>
+                    <input type="password" id="loginPasswordInput" required value="NP1234" placeholder="例如：NP1234" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">姓名 / 職稱</label>
+                    <input type="text" id="loginNameInput" required value="陳建宏 命題委員" placeholder="例如：陳建宏 委員" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-cgust-500">
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 space-y-1">
+                    <div class="font-bold flex items-center gap-1.5">
+                        <i class="ph-fill ph-clock-countdown text-amber-600"></i>
+                        <span>借閱清單 5 天保留提醒：</span>
+                    </div>
+                    <p class="leading-relaxed">書籍加入借閱清單後若未送出即登出，系統將為您的 E-mail 自動保留 <strong>5 天</strong>。</p>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-cgust-600 to-amber-600 hover:from-cgust-700 hover:to-amber-700 text-white font-bold text-sm rounded-xl shadow-md shadow-cgust-500/20 transition-all flex items-center justify-center gap-2 active:scale-[0.99]">
+                    <i class="ph-bold ph-sign-in text-base"></i>
+                    <span>登入進入專屬子網頁</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== STEALTH MAINTAINER MODAL ==================== -->
+    <div id="stealthMaintainerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+        <div class="bg-slate-900 text-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="ph-fill ph-key text-amber-400 text-xl"></i>
+                    <h3 class="text-sm font-bold tracking-wide">平台維護人員子網頁授權驗證</h3>
+                </div>
+                <button onclick="window.closeStealthModal()" class="text-slate-400 hover:text-white">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                請輸入維護授權碼以進入「平台維護人員專屬子網頁」，解鎖單冊強制狀態變更、新增刪除單冊與底層庫存校正功能。
+            </p>
+            <form onsubmit="window.handleStealthLogin(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">維護授權碼</label>
+                    <input type="password" id="stealthPassInput" value="SUPER-NP-2026" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all">
+                    驗證並進入平台維護子網頁
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 1: CART CHECKOUT ==================== -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto space-y-4 sm:space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cgust-100 text-cgust-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="ph-bold ph-list-checks"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900">命題參考書借閱清單</h3>
+                        <p id="cartModalRetentionSub" class="text-xs text-amber-700 font-medium">⏱️ 您的借閱清單內容於登出後將保留 5 天，請確認編號與版本後填寫寄送地址</p>
+                    </div>
+                </div>
+                <button onclick="window.closeCartModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <div id="cartItemsContainer" class="space-y-2.5 max-h-60 overflow-y-auto pr-1"></div>
+
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-3.5 text-xs text-rose-800 space-y-1">
+                <div class="font-bold flex items-center gap-1.5 text-rose-900">
+                    <i class="ph-fill ph-warning-circle text-rose-600 text-base"></i>
+                    <span>重要借閱須知與歸還期限提醒：</span>
+                </div>
+                <p>1. 提醒命題繳交期限：請務必於 <strong class="underline">116年7月15日前</strong> 寄回 <strong>長庚科技大學 葉欣儒助理收</strong>。</p>
+                <p>2. 送出借閱清單後，系統將自動產生「<strong>電子借用清單通知信</strong>」供您留存核對，並由專人為您寄出實體書籍。</p>
+            </div>
+
+            <form id="checkoutForm" onsubmit="window.submitCartCheckout(event)" class="space-y-3.5 pt-2 border-t border-slate-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">收件委員姓名 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="shipRecipient" required placeholder="請輸入收件人全名" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-cgust-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">聯絡手機 / 電話 <span class="text-rose-500">*</span></label>
+                        <input type="tel" id="shipPhone" required placeholder="例如：0912-345-678" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-cgust-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">書籍寄送地址 (醫院科室或住家地址) <span class="text-rose-500">*</span></label>
+                    <input type="text" id="shipAddress" required placeholder="例如：333桃園市龜山區文化一路261號 (或醫院科室詳細地址)" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-cgust-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">備註事項 (選填)</label>
+                    <input type="text" id="shipNote" placeholder="例如：請於平日上班時間寄達警衛室代收" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-cgust-500">
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="window.closeCartModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50">
+                        繼續選書 (保留於借閱清單 5 天)
+                    </button>
+                    <button type="submit" id="checkoutSubmitBtn" class="px-5 py-2.5 rounded-xl bg-cgust-600 hover:bg-cgust-700 text-white text-xs font-bold shadow-md shadow-cgust-500/20 flex items-center justify-center gap-1.5">
+                        <i class="ph-bold ph-paper-plane-right"></i>
+                        <span>確認送出借閱清單</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: EMAIL RECEIPT ==================== -->
+    <div id="emailReceiptModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                        <i class="ph-bold ph-envelope-open"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">系統已自動發送借閱清單至您的信箱</span>
+                        <h3 class="text-sm sm:text-base font-bold text-slate-900 mt-0.5">命題參考書借閱清單與歸還期限通知單</h3>
+                    </div>
+                </div>
+                <button onclick="window.closeEmailReceiptModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <div id="emailReceiptContent" class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-700 space-y-3 font-sans leading-relaxed"></div>
+
+            <div class="flex items-center justify-between pt-2">
+                <button onclick="window.copyReceiptText()" class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5">
+                    <i class="ph-bold ph-copy"></i>
+                    <span>複製借閱清單內容</span>
+                </button>
+                <button onclick="window.closeEmailReceiptModal()" class="px-5 py-2 rounded-xl bg-cgust-600 hover:bg-cgust-700 text-white text-xs font-bold">
+                    我已詳閱並留存
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: ADD / EDIT BOOK ==================== -->
+    <div id="bookModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="ph-bold ph-sparkle"></i>
+                    </div>
+                    <div>
+                        <h3 id="bookModalTitle" class="text-sm sm:text-base font-bold text-slate-900">新增 / 編輯命題參考書與自編編號</h3>
+                        <p class="text-xs text-slate-500">支援自編書籍編號、學校資產編號前綴、ISBN 與 Gemini AI 摘要生成</p>
+                    </div>
+                </div>
+                <button onclick="window.closeBookModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <form onsubmit="window.handleBookSave(event)" class="space-y-3.5">
+                <input type="hidden" id="editBookId">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-indigo-700 mb-1">自編書籍編號 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="bookCodeInput" required placeholder="例如：NP-IN-001" class="w-full px-3.5 py-2 border border-indigo-300 bg-indigo-50/40 rounded-xl text-sm font-mono font-bold focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">書籍完整名稱 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="bookTitleInput" required placeholder="例如：內外科護理學 (上/下冊)" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">版本 / 版次 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="bookEditionInput" required placeholder="例如：第9版 / 21e" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">作者 / 譯者 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="bookAuthorInput" required placeholder="輸入作者姓名" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ISBN 書號 <span class="text-rose-500">*</span></label>
+                        <input type="text" id="bookIsbnInput" required placeholder="978-986-..." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm font-mono focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">科別分類</label>
+                        <select id="bookSpecialtyInput" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white">
+                            <option value="通論">📖 通論</option>
+                            <option value="內科">🫀 內科</option>
+                            <option value="外科">🔪 外科</option>
+                            <option value="麻醉科">💉 麻醉科</option>
+                            <option value="兒科">👶 兒科</option>
+                            <option value="精神科">🧠 精神科</option>
+                            <option value="婦產科">🤰 婦產科</option>
+                            <option value="家庭科">👨‍👩‍👧 家庭科</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">語言類別</label>
+                        <select id="bookLangInput" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white">
+                            <option value="中文">🇹🇼 中文</option>
+                            <option value="西文">🌍 西文</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">採購總冊數</label>
+                        <input type="number" id="bookTotalCopiesInput" min="1" max="50" value="3" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">資產編號前綴</label>
+                        <input type="text" id="bookAssetPrefixInput" value="CGUST-A" placeholder="CGUST-A" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono">
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between">
+                    <label for="bookIsOfficialRefInput" class="flex items-center gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="bookIsOfficialRefInput" checked class="w-4 h-4 accent-cgust-600 rounded">
+                        <div>
+                            <span class="text-xs font-bold text-amber-900 flex items-center gap-1">⭐ 標註為「專科護理師甄審公告參考書籍」</span>
+                            <span class="block text-[11px] text-amber-700">勾選後將於命題委員前端顯示官方公告參考用書金色徽章</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between flex-wrap gap-1">
+                        <label class="block text-xs font-semibold text-slate-700">書籍重點摘要 (100字內)</label>
+                        <button type="button" id="aiAutofillBtn" onclick="window.triggerGeminiAutofill()" class="px-3 py-1 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold flex items-center gap-1 shadow-sm transition-all">
+                            <i class="ph-bold ph-magic-wand"></i>
+                            <span>Gemini AI 自動補全摘要與標籤</span>
+                        </button>
+                    </div>
+                    <textarea id="bookSummaryInput" rows="2" required placeholder="點擊右上方 AI 自動補全，或手動輸入命題參考重點..." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">檢索標籤 (以逗號分隔)</label>
+                    <input type="text" id="bookTagsInput" placeholder="例如：公告用書, 內科專師, 臨床指引" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="window.closeBookModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 text-xs font-semibold">取消</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm">儲存書籍與生成單冊編號</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 4: BOOK COPIES DETAIL ==================== -->
+    <div id="bookCopiesDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto space-y-4">
+            <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-200">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span id="detailModalBookCode" class="px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white text-xs font-mono font-bold">NP-IN-001</span>
+                        <span id="detailModalEdition" class="px-2 py-0.5 rounded bg-slate-800 text-white text-xs font-bold">第9版</span>
+                        <span id="detailModalSpecialty"></span>
+                    </div>
+                    <h3 id="detailModalTitle" class="text-base sm:text-lg font-bold text-slate-900">書籍單冊明細</h3>
+                    <p id="detailModalSubInfo" class="text-xs text-slate-500 font-mono"></p>
+                </div>
+                <button onclick="window.closeBookCopiesModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1" id="detailModalCopiesList"></div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                <span>💡 點擊單冊右側按鈕可變更狀態（在庫 / 標記遺失）或直接編輯資產編號</span>
+                <div class="flex items-center gap-2 self-end sm:self-auto">
+                    <button id="detailModalEditBookBtn" onclick="" class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold flex items-center gap-1">
+                        <i class="ph-bold ph-pencil-simple"></i>
+                        <span>編輯書籍主檔</span>
+                    </button>
+                    <button onclick="window.closeBookCopiesModal()" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold">
+                        關閉視窗
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-20 md:bottom-5 right-4 z-50 space-y-2 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200/80 py-4 mt-auto select-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 text-center sm:text-left">
+            <div class="flex items-center gap-2 cursor-default flex-wrap justify-center" onclick="window.handleSecretFooterClick()">
+                <span>🔮</span>
+                <span class="font-semibold text-slate-700">書庫管理與借閱登記</span>
+                <span>|</span>
+                <span>創作者：長庚科技大學 葉欣儒助理</span>
+            </div>
+            <div class="font-mono text-slate-500 text-[11px] sm:text-xs">
+                © 2026 Cgust NP (專科護理師甄審計畫). All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== APPLICATION LOGIC ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const customFirebaseConfig = {
+            apiKey: "AIzaSyDM6D1OQOJdeV489w6YHoqsBb9HFL-wX64",
+            authDomain: "cgust-book-manage.firebaseapp.com",
+            projectId: "cgust-book-manage",
+            storageBucket: "cgust-book-manage.firebasestorage.app",
+            messagingSenderId: "696744024130",
+            appId: "1:696744024130:web:c3ae5a6b8cd4187a0af5db",
+            measurementId: "G-5N655R5C1J"
+        };
+
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : customFirebaseConfig;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cgust-np-library-2026';
+
+        let app, db, auth;
+        let isCloudReady = false;
+
+        const CART_RETENTION_MS = 5 * 24 * 60 * 60 * 1000;
+        const RETURN_DEADLINE_TEXT = "116年7月15日前寄回長庚科技大學 葉欣儒助理收";
+
+        const INITIAL_BOOKS = [
+            {
+                bookId: "bk-np-001",
+                bookCode: "NP-IN-001",
+                title: "內外科護理學 (上/下冊合訂本)",
+                author: "劉雪娥、王桂芸 等合著",
+                edition: "第9版",
+                isbn: "978-986-194-602-3",
+                specialty: "內科",
+                langType: "中文",
+                isOfficialRef: true,
+                totalCopies: 5,
+                availableCopies: 3,
+                status: "AVAILABLE",
+                summary: "專科護理師甄審內外各科核心命題參考用書，涵蓋急重症照護、心肺血管與內分泌臨床處置指引。",
+                tags: ["公告用書", "內科專師", "臨床照護"],
+                copies: [
+                    { copyCode: "NP-IN-001-C1", assetId: "CGUST-A1001", status: "BORROWED", borrowerName: "陳建宏 命題委員 (內科組)", borrowerEmail: "committee@cgust.edu.tw", borrowedAt: "2026-10-12" },
+                    { copyCode: "NP-IN-001-C2", assetId: "CGUST-A1002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-001-C3", assetId: "CGUST-A1003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-001-C4", assetId: "CGUST-A1004", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-001-C5", assetId: "CGUST-A1005", status: "LOST", borrowerName: "114年度盤點待尋", borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-002",
+                bookCode: "NP-IN-002",
+                title: "Harrison's Principles of Internal Medicine",
+                author: "Joseph Loscalzo, Anthony Fauci",
+                edition: "21st Edition",
+                isbn: "978-1-264-26850-4",
+                specialty: "內科",
+                langType: "西文",
+                isOfficialRef: true,
+                totalCopies: 4,
+                availableCopies: 4,
+                status: "AVAILABLE",
+                summary: "國際內科學權威經典，針對專科護理師進階病理生理學、鑑別診斷與實證治療提供完整西文命題依據。",
+                tags: ["Harrison", "鑑別診斷", "西文核心"],
+                copies: [
+                    { copyCode: "NP-IN-002-C1", assetId: "CGUST-A1011", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-002-C2", assetId: "CGUST-A1012", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-002-C3", assetId: "CGUST-A1013", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-IN-002-C4", assetId: "CGUST-A1014", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-003",
+                bookCode: "NP-SU-001",
+                title: "Sabiston Textbook of Surgery",
+                author: "Courtney M. Townsend Jr.",
+                edition: "21st Edition",
+                isbn: "978-0-323-64062-6",
+                specialty: "外科",
+                langType: "西文",
+                isOfficialRef: true,
+                totalCopies: 3,
+                availableCopies: 2,
+                status: "AVAILABLE",
+                summary: "外科專科護理師甄審指定西文參考巨著，詳述術前評估、手術適應症與術後併發症處置。",
+                tags: ["外科專師", "手術照護", "Sabiston"],
+                copies: [
+                    { copyCode: "NP-SU-001-C1", assetId: "CGUST-A2001", status: "BORROWED", borrowerName: "王志明 命題委員 (外科組)", borrowerEmail: "surg_comm@cgust.edu.tw", borrowedAt: "2026-10-10" },
+                    { copyCode: "NP-SU-001-C2", assetId: "CGUST-A2002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-SU-001-C3", assetId: "CGUST-A2003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-004",
+                bookCode: "NP-AN-001",
+                title: "Miller's Basics of Anesthesia",
+                author: "Manuel C. Pardo",
+                edition: "8th Edition",
+                isbn: "978-0-323-79677-4",
+                specialty: "麻醉科",
+                langType: "西文",
+                isOfficialRef: true,
+                totalCopies: 3,
+                availableCopies: 3,
+                status: "AVAILABLE",
+                summary: "麻醉科專科護理師甄審核心參考用書，涵蓋氣道管理、麻醉藥理學與圍術期生命徵象監測。",
+                tags: ["麻醉專師", "氣道管理", "藥理學"],
+                copies: [
+                    { copyCode: "NP-AN-001-C1", assetId: "CGUST-A3001", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-AN-001-C2", assetId: "CGUST-A3002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-AN-001-C3", assetId: "CGUST-A3003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-005",
+                bookCode: "NP-PE-001",
+                title: "實用兒科護理學",
+                author: "陳月枝、黃美智 等編著",
+                edition: "第9版",
+                isbn: "978-986-194-588-0",
+                specialty: "兒科",
+                langType: "中文",
+                isOfficialRef: true,
+                totalCopies: 3,
+                availableCopies: 2,
+                status: "AVAILABLE",
+                summary: "針對兒童及新生兒各發展階段之常見急慢性疾病、疫苗接種與兒童重症專科護理實務詳加剖析。",
+                tags: ["兒科專師", "兒童重症", "發展評估"],
+                copies: [
+                    { copyCode: "NP-PE-001-C1", assetId: "CGUST-A4001", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-PE-001-C2", assetId: "CGUST-A4002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-PE-001-C3", assetId: "CGUST-A4003", status: "LOST", borrowerName: "歷年未歸還待追查", borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-006",
+                bookCode: "NP-PS-001",
+                title: "精神科護理概論：基本概念及臨床應用",
+                author: "蕭淑貞 等合著",
+                edition: "第10版",
+                isbn: "978-986-194-615-3",
+                specialty: "精神科",
+                langType: "中文",
+                isOfficialRef: true,
+                totalCopies: 3,
+                availableCopies: 3,
+                status: "AVAILABLE",
+                summary: "精神科專科護理師命題必備，包含 DSM-5 診斷標準對照、精神藥理學與危機處置實務。",
+                tags: ["精神專師", "DSM-5", "社區精神"],
+                copies: [
+                    { copyCode: "NP-PS-001-C1", assetId: "CGUST-A5001", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-PS-001-C2", assetId: "CGUST-A5002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-PS-001-C3", assetId: "CGUST-A5003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-007",
+                bookCode: "NP-OB-001",
+                title: "Williams Obstetrics",
+                author: "F. Gary Cunningham",
+                edition: "26th Edition",
+                isbn: "978-1-260-46273-9",
+                specialty: "婦產科",
+                langType: "西文",
+                isOfficialRef: true,
+                totalCopies: 2,
+                availableCopies: 1,
+                status: "AVAILABLE",
+                summary: "婦產科專科護理師權威參考書，涵蓋高危險妊娠評估、產科急症與周產期照護。",
+                tags: ["婦產專師", "高危險妊娠", "周產期"],
+                copies: [
+                    { copyCode: "NP-OB-001-C1", assetId: "CGUST-A6001", status: "BORROWED", borrowerName: "林雅婷 命題委員 (婦產科組)", borrowerEmail: "obgyn_comm@cgust.edu.tw", borrowedAt: "2026-10-18" },
+                    { copyCode: "NP-OB-001-C2", assetId: "CGUST-A6002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-008",
+                bookCode: "NP-GN-001",
+                title: "專科護理師通論與進階健康評估",
+                author: "台灣專科護理師學會 編著",
+                edition: "第4版",
+                isbn: "978-986-987-112-9",
+                specialty: "通論",
+                langType: "中文",
+                isOfficialRef: true,
+                totalCopies: 4,
+                availableCopies: 3,
+                status: "AVAILABLE",
+                summary: "全體科別專科護理師必考通論科目核心教材，包含專師法規、執業範疇、身體評估與實證護理。",
+                tags: ["通論必考", "健康評估", "專師法規"],
+                copies: [
+                    { copyCode: "NP-GN-001-C1", assetId: "CGUST-A7001", status: "BORROWED", borrowerName: "陳建宏 命題委員 (內科組)", borrowerEmail: "committee@cgust.edu.tw", borrowedAt: "2026-10-15" },
+                    { copyCode: "NP-GN-001-C2", assetId: "CGUST-A7002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-GN-001-C3", assetId: "CGUST-A7003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-GN-001-C4", assetId: "CGUST-A7004", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            },
+            {
+                bookId: "bk-np-009",
+                bookCode: "NP-FM-001",
+                title: "家庭醫學與社區基層醫療照護",
+                author: "台灣家庭醫學醫學會",
+                edition: "第5版",
+                isbn: "978-986-890-331-2",
+                specialty: "家庭科",
+                langType: "中文",
+                isOfficialRef: false,
+                totalCopies: 3,
+                availableCopies: 3,
+                status: "AVAILABLE",
+                summary: "家庭科專科護理師命題補充教材，探討慢性病共病管理、長照居家醫療與預防保健。",
+                tags: ["家庭專師", "慢性病管理", "居家醫療"],
+                copies: [
+                    { copyCode: "NP-FM-001-C1", assetId: "CGUST-A8001", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-FM-001-C2", assetId: "CGUST-A8002", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null },
+                    { copyCode: "NP-FM-001-C3", assetId: "CGUST-A8003", status: "AVAILABLE", borrowerName: null, borrowerEmail: null, borrowedAt: null }
+                ]
+            }
+        ];
+
+        const INITIAL_BORROWS = [
+            {
+                recordId: "rec-demo-101",
+                bookId: "bk-np-001",
+                bookCode: "NP-IN-001",
+                copyCode: "NP-IN-001-C1",
+                assetId: "CGUST-A1001",
+                bookTitle: "內外科護理學 (上/下冊合訂本)",
+                edition: "第9版",
+                isbn: "978-986-194-602-3",
+                userId: "committee@cgust.edu.tw",
+                userName: "陳建宏 命題委員 (內科組)",
+                recipientName: "陳建宏 醫師/委員",
+                phone: "0912-345-678",
+                shippingAddress: "333桃園市龜山區復興街5號 (林口長庚內科部)",
+                borrowedAt: "2026-10-12 09:30",
+                dueDate: "116年7月15日前",
+                returnedAt: null,
+                status: "ACTIVE",
+                trackingNo: "黑貓宅急便 9012-8831"
+            },
+            {
+                recordId: "rec-demo-103",
+                bookId: "bk-np-008",
+                bookCode: "NP-GN-001",
+                copyCode: "NP-GN-001-C1",
+                assetId: "CGUST-A7001",
+                bookTitle: "專科護理師通論與進階健康評估",
+                edition: "第4版",
+                isbn: "978-986-987-112-9",
+                userId: "committee@cgust.edu.tw",
+                userName: "陳建宏 命題委員 (內科組)",
+                recipientName: "陳建宏 醫師/委員",
+                phone: "0912-345-678",
+                shippingAddress: "333桃園市龜山區復興街5號 (林口長庚內科部)",
+                borrowedAt: "2026-10-15 11:10",
+                dueDate: "116年7月15日前",
+                returnedAt: null,
+                status: "PENDING_SHIP",
+                trackingNo: "待寄出"
+            },
+            {
+                recordId: "rec-demo-102",
+                bookId: "bk-np-007",
+                bookCode: "NP-OB-001",
+                copyCode: "NP-OB-001-C1",
+                assetId: "CGUST-A6001",
+                bookTitle: "Williams Obstetrics",
+                edition: "26th Edition",
+                isbn: "978-1-260-46273-9",
+                userId: "obgyn_comm@cgust.edu.tw",
+                userName: "林雅婷 命題委員 (婦產科組)",
+                recipientName: "林雅婷 委員",
+                phone: "0928-111-222",
+                shippingAddress: "100台北市中正區中山南路7號 (婦產部辦公室)",
+                borrowedAt: "2026-10-18 14:20",
+                dueDate: "116年7月15日前",
+                returnedAt: null,
+                status: "PENDING_SHIP",
+                trackingNo: "待寄出"
+            }
+        ];
+
+        const INITIAL_RECOMMENDATIONS = [
+            {
+                recId: "rec-001",
+                title: "Bates' Guide to Physical Examination and History Taking (13e)",
+                author: "Lynn S. Bickley",
+                isbn: "978-1-4963-9817-8",
+                specialty: "通論",
+                langType: "西文",
+                reason: "通論進階健康評估最新第13版，建議增購3本供通論命題委員參考。",
+                recommender: "陳建宏 命題委員",
+                recommenderEmail: "committee@cgust.edu.tw",
+                createdAt: "2026-10-19 16:40"
+            }
+        ];
+
+        const state = {
+            currentUser: null,
+            staffPreviewingMemberPortal: false,
+            activeMemberTab: 'catalog',
+            activeStaffTab: 'orders',
+            statusFilter: 'ALL',
+            books: JSON.parse(JSON.stringify(INITIAL_BOOKS)),
+            borrowRecords: JSON.parse(JSON.stringify(INITIAL_BORROWS)),
+            recommendations: JSON.parse(JSON.stringify(INITIAL_RECOMMENDATIONS)),
+            userCarts: {
+                "committee@cgust.edu.tw": {
+                    items: ["bk-np-002"],
+                    savedAt: Date.now() - (1 * 24 * 60 * 60 * 1000)
+                }
+            },
+            expandedBorrowers: {
+                "committee@cgust.edu.tw": true,
+                "obgyn_comm@cgust.edu.tw": true
+            },
+            activeDetailBookId: null
+        };
+
+        function recalcBookCopyCounts(book) {
+            if (!book.copies || !Array.isArray(book.copies)) {
+                book.copies = [];
+                const total = book.totalCopies || 1;
+                for (let i = 1; i <= total; i++) {
+                    book.copies.push({
+                        copyCode: `${book.bookCode || 'NP-BK'}-C${i}`,
+                        assetId: `CGUST-A90${i}`,
+                        status: i <= (book.availableCopies ?? total) ? 'AVAILABLE' : 'BORROWED',
+                        borrowerName: null,
+                        borrowerEmail: null,
+                        borrowedAt: null
+                    });
+                }
+            }
+            book.totalCopies = book.copies.length;
+            book.availableCopies = book.copies.filter(c => c.status === 'AVAILABLE').length;
+            book.status = book.availableCopies > 0 ? 'AVAILABLE' : 'BORROWED';
+        }
+
+        state.books.forEach(recalcBookCopyCounts);
+
+        function isStaffRole(role) {
+            return ['admin', 'colleague', 'assistant'].includes(role);
+        }
+
+        function getCurrentCartObj() {
+            if (!state.currentUser) return { items: [], savedAt: Date.now() };
+            const key = state.currentUser.email;
+            const record = state.userCarts[key];
+            if (!record) {
+                state.userCarts[key] = { items: [], savedAt: Date.now() };
+                return state.userCarts[key];
+            }
+            const elapsed = Date.now() - (record.savedAt || Date.now());
+            if (elapsed > CART_RETENTION_MS) {
+                state.userCarts[key] = { items: [], savedAt: Date.now() };
+                showToast("您的借閱清單已超過 5 天保留期限，系統已自動清空釋出。", "warning");
+            }
+            return state.userCarts[key];
+        }
+
+        function getRemainingRetentionDays() {
+            if (!state.currentUser) return 5;
+            const record = state.userCarts[state.currentUser.email];
+            if (!record || !record.items || record.items.length === 0) return 5;
+            const elapsedMs = Date.now() - (record.savedAt || Date.now());
+            const remainMs = Math.max(0, CART_RETENTION_MS - elapsedMs);
+            return Math.max(1, Math.ceil(remainMs / (24 * 60 * 60 * 1000)));
+        }
+
+        async function persistCartToCloud() {
+            if (!state.currentUser) return;
+            const key = state.currentUser.email;
+            const cartObj = getCurrentCartObj();
+            cartObj.savedAt = Date.now();
+            if (isCloudReady && auth?.currentUser) {
+                try {
+                    const cartDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'member_carts', encodeURIComponent(key));
+                    await setDoc(cartDocRef, {
+                        email: key,
+                        itemsJson: JSON.stringify(cartObj.items),
+                        savedAt: cartObj.savedAt
+                    });
+                } catch (e) {}
+            }
+        }
+
+        function getRoleBadgeHtml(role, darkTheme = false) {
+            if (role === 'admin' || role === 'colleague') {
+                return darkTheme
+                    ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">管理員</span>`
+                    : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">管理員</span>`;
+            }
+            if (role === 'assistant') {
+                return darkTheme
+                    ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">行政人員</span>`
+                    : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">行政人員</span>`;
+            }
+            return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">命題委員</span>`;
+        }
+
+        function getLangBadgeHtml(langType) {
+            if (langType === '西文') {
+                return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">🌍 西文</span>`;
+            }
+            return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🇹🇼 中文</span>`;
+        }
+
+        function getSpecialtyBadgeHtml(specialty) {
+            const icons = {
+                '通論': '📖',
+                '內科': '🫀',
+                '外科': '🔪',
+                '麻醉科': '💉',
+                '兒科': '👶',
+                '精神科': '🧠',
+                '婦產科': '🤰',
+                '家庭科': '👨‍👩‍👧'
+            };
+            const icon = icons[specialty] || '📚';
+            return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-cgust-50 text-cgust-700 border border-cgust-200">${icon} ${specialty || '通論'}</span>`;
+        }
+
+        window.syncLoginPresetByRole = function () {
+            const role = document.getElementById('loginRoleSelect').value;
+            const emailEl = document.getElementById('loginEmailInput');
+            const nameEl = document.getElementById('loginNameInput');
+            if (role === 'colleague') {
+                emailEl.value = 'manager.np@cgust.edu.tw';
+                nameEl.value = '張雅筑 管理員';
+            } else if (role === 'assistant') {
+                emailEl.value = 'staff.np@cgust.edu.tw';
+                nameEl.value = '林小安 行政人員';
+            } else {
+                emailEl.value = 'committee@cgust.edu.tw';
+                nameEl.value = '陳建宏 命題委員';
+            }
+        };
+
+        let secretClickCount = 0;
+        let secretClickTimer = null;
+        window.handleSecretLogoClick = function () {
+            secretClickCount++;
+            if (secretClickTimer) clearTimeout(secretClickTimer);
+            if (secretClickCount >= 5) {
+                secretClickCount = 0;
+                const modal = document.getElementById('stealthMaintainerModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                secretClickTimer = setTimeout(() => {
+                    secretClickCount = 0;
+                }, 1800);
+            }
+        };
+
+        window.handleSecretFooterClick = function () {
+            window.handleSecretLogoClick();
+        };
+
+        window.closeStealthModal = function () {
+            const modal = document.getElementById('stealthMaintainerModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleStealthLogin = function (e) {
+            e.preventDefault();
+            const pass = document.getElementById('stealthPassInput').value.trim();
+            if (pass === 'SUPER-NP-2026' || pass === 'CGUST-NP-2026') {
+                state.currentUser = {
+                    uid: 'xinru.ye@cgust.edu.tw',
+                    email: 'xinru.ye@cgust.edu.tw',
+                    displayName: '管理員',
+                    role: 'admin'
+                };
+                state.staffPreviewingMemberPortal = false;
+                window.closeStealthModal();
+                const gate = document.getElementById('loginGateOverlay');
+                gate.classList.add('hidden');
+                gate.classList.remove('flex');
+                syncInterfaceLayout();
+                showToast('已進入後台管理中心（具備完整權限）。', 'success');
+            } else {
+                showToast('授權碼不正確。', 'error');
+            }
+        };
+
+        window.openAuthModal = function () {
+            document.getElementById('loginGateOverlay').classList.remove('hidden');
+            document.getElementById('loginGateOverlay').classList.add('flex');
+        };
+
+        window.handleCommitteeLogin = function (e) {
+            if (e) e.preventDefault();
+            const email = document.getElementById('loginEmailInput').value.trim();
+            const password = document.getElementById('loginPasswordInput').value.trim();
+            const name = document.getElementById('loginNameInput').value.trim();
+            let role = document.getElementById('loginRoleSelect').value;
+
+            if (email.toLowerCase() === 'xinru.ye@cgust.edu.tw' || password === 'SUPER-NP-2026') {
+                role = 'admin';
+            }
+
+            state.currentUser = {
+                uid: email,
+                email: email,
+                displayName: name,
+                role: role
+            };
+            state.staffPreviewingMemberPortal = false;
+
+            const gate = document.getElementById('loginGateOverlay');
+            gate.classList.add('hidden');
+            gate.classList.remove('flex');
+
+            const shipRecipient = document.getElementById('shipRecipient');
+            if (shipRecipient) shipRecipient.value = name;
+
+            syncInterfaceLayout();
+
+            if (role === 'member') {
+                const cartObj = getCurrentCartObj();
+                const remainDays = getRemainingRetentionDays();
+                if (cartObj.items.length > 0) {
+                    showToast(`歡迎 ${name}！已還原您上次借閱清單中的 ${cartObj.items.length} 本書（保留倒數 ${remainDays} 天）。`, 'info');
+                } else {
+                    showToast(`歡迎 ${name} 進入命題委員借閱平台！`, 'success');
+                }
+            } else {
+                showToast(`歡迎 ${name} 進入後台管理中心！`, 'success');
+            }
+        };
+
+        window.handleLogout = function () {
+            state.currentUser = null;
+            state.staffPreviewingMemberPortal = false;
+            window.openAuthModal();
+            showToast('您已安全登出系統。', 'info');
+        };
+
+        window.toggleStaffPreviewMode = function (enablePreview) {
+            if (!state.currentUser || !isStaffRole(state.currentUser.role)) return;
+            state.staffPreviewingMemberPortal = Boolean(enablePreview);
+            syncInterfaceLayout();
+            if (enablePreview) {
+                showToast('已切換至「命題委員介面」預覽模式！', 'info');
+            } else {
+                showToast('已返回後台管理中心。', 'info');
+            }
+        };
+
+        function syncInterfaceLayout() {
+            const memberPortal = document.getElementById('committeePortalWrapper');
+            const staffBackend = document.getElementById('staffBackendWrapper');
+            const previewBanner = document.getElementById('staffPreviewBanner');
+
+            if (!state.currentUser) return;
+
+            const staff = isStaffRole(state.currentUser.role);
+            const showMemberPortal = !staff || state.staffPreviewingMemberPortal;
+
+            if (staff && state.staffPreviewingMemberPortal) {
+                previewBanner.classList.remove('hidden');
+            } else {
+                previewBanner.classList.add('hidden');
+            }
+
+            if (showMemberPortal) {
+                memberPortal.classList.remove('hidden');
+                memberPortal.classList.add('flex');
+                staffBackend.classList.add('hidden');
+                staffBackend.classList.remove('flex');
+
+                updateMemberHeaderUI();
+                window.switchMemberTab(state.activeMemberTab);
+            } else {
+                staffBackend.classList.remove('hidden');
+                staffBackend.classList.add('flex');
+                memberPortal.classList.add('hidden');
+                memberPortal.classList.remove('flex');
+
+                updateStaffHeaderUI();
+                window.switchStaffTab(state.activeStaffTab);
+            }
+        }
+
+        function updateMemberHeaderUI() {
+            const cartObj = getCurrentCartObj();
+            const remainDays = getRemainingRetentionDays();
+            document.getElementById('memberCartBadge').textContent = cartObj.items.length;
+
+            const hintEl = document.getElementById('cartRetentionHint');
+            if (hintEl) {
+                if (cartObj.items.length > 0) {
+                    hintEl.innerHTML = `⏱️ 您的借閱清單目前有 <strong>${cartObj.items.length}</strong> 本書，登出後將自動保留 <strong>${remainDays} 天</strong>（5天未送出自動釋出）。`;
+                } else {
+                    hintEl.textContent = `提醒：借閱清單於登出後將為您保留 5 天，逾期未送出將自動釋出名額。`;
+                }
+            }
+
+            const memberAuthArea = document.getElementById('memberAuthArea');
+            memberAuthArea.innerHTML = `
+                <div class="hidden md:flex flex-col items-end">
+                    <div class="flex items-center gap-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">命題委員</span>
+                        <span class="text-xs font-bold text-slate-800">${escapeHtml(state.currentUser.displayName)}</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">${escapeHtml(state.currentUser.email)}</span>
+                </div>
+                <button onclick="window.handleLogout()" class="px-2.5 sm:px-3 py-2 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-600 text-xs font-bold transition-colors flex items-center gap-1">
+                    <i class="ph-bold ph-sign-out text-sm"></i>
+                    <span>登出</span>
+                </button>
+            `;
+        }
+
+        function updateStaffHeaderUI() {
+            const roleBadgeContainer = document.getElementById('staffHeaderRoleBadge');
+            roleBadgeContainer.innerHTML = getRoleBadgeHtml(state.currentUser.role, true);
+
+            const titleEl = document.getElementById('staffPortalHeaderTitle');
+            if (titleEl) {
+                titleEl.textContent = state.currentUser.role === 'assistant'
+                    ? '專師甄審書庫 — 行政人員管理中心'
+                    : '專師甄審書庫 — 後台管理中心';
+            }
+
+            const staffAuthArea = document.getElementById('staffAuthArea');
+            staffAuthArea.innerHTML = `
+                <div class="hidden lg:flex flex-col items-end mr-1">
+                    <span class="text-xs font-bold text-white">${escapeHtml(state.currentUser.displayName)}</span>
+                    <span class="text-[11px] text-slate-400">${escapeHtml(state.currentUser.email)}</span>
+                </div>
+                <button onclick="window.handleLogout()" class="px-2.5 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-200 hover:text-white text-xs font-bold border border-rose-500/30 transition-all flex items-center gap-1">
+                    <i class="ph-bold ph-sign-out text-sm"></i>
+                    <span class="hidden xs:inline">登出</span>
+                </button>
+            `;
+        }
+
+        window.switchMemberTab = function (tab) {
+            state.activeMemberTab = tab;
+            const views = {
+                'catalog': document.getElementById('mViewCatalog'),
+                'my-borrows': document.getElementById('mViewMyBorrows'),
+                'recommend': document.getElementById('mViewRecommend'),
+                'manual': document.getElementById('mViewManual')
+            };
+            const deskBtns = {
+                'catalog': document.getElementById('mTabCatalog'),
+                'my-borrows': document.getElementById('mTabMyBorrows'),
+                'recommend': document.getElementById('mTabRecommend'),
+                'manual': document.getElementById('mTabManual')
+            };
+            const mobBtns = {
+                'catalog': document.getElementById('mMobTabCatalog'),
+                'my-borrows': document.getElementById('mMobTabMyBorrows'),
+                'recommend': document.getElementById('mMobTabRecommend'),
+                'manual': document.getElementById('mMobTabManual')
+            };
+
+            Object.keys(views).forEach(k => {
+                if (views[k]) views[k].classList.toggle('hidden', k !== tab);
+                if (deskBtns[k]) {
+                    deskBtns[k].className = k === tab
+                        ? "px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 bg-cgust-600 text-white shadow-sm shadow-cgust-500/20"
+                        : "px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 text-slate-600 hover:bg-slate-200/70";
+                }
+                if (mobBtns[k]) {
+                    mobBtns[k].className = k === tab
+                        ? "flex flex-col items-center justify-center py-1 rounded-xl text-cgust-600 font-bold bg-cgust-50"
+                        : "flex flex-col items-center justify-center py-1 rounded-xl text-slate-500 font-medium";
+                }
+            });
+
+            renderPopularTags();
+            renderMemberCatalog();
+            renderMemberBorrows();
+            renderMemberRecommendations();
+            renderMemberManual();
+        };
+
+        window.switchStaffTab = function (tab) {
+            state.activeStaffTab = tab;
+            const views = {
+                'orders': document.getElementById('sViewOrders'),
+                'all-books': document.getElementById('sViewAllBooks'),
+                'catalog-entry': document.getElementById('sViewCatalogEntry'),
+                'audit': document.getElementById('sViewAudit'),
+                'manual': document.getElementById('sViewManual')
+            };
+            const btns = {
+                'orders': document.getElementById('sTabOrders'),
+                'all-books': document.getElementById('sTabAllBooks'),
+                'catalog-entry': document.getElementById('sTabCatalogEntry'),
+                'audit': document.getElementById('sTabAudit'),
+                'manual': document.getElementById('sTabManual')
+            };
+            const mobBtns = {
+                'orders': document.getElementById('sMobTabOrders'),
+                'all-books': document.getElementById('sMobTabAllBooks'),
+                'catalog-entry': document.getElementById('sMobTabCatalogEntry'),
+                'audit': document.getElementById('sMobTabAudit'),
+                'manual': document.getElementById('sMobTabManual')
+            };
+
+            Object.keys(views).forEach(k => {
+                if (views[k]) views[k].classList.toggle('hidden', k !== tab);
+                if (btns[k]) {
+                    btns[k].className = k === tab
+                        ? "shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 bg-slate-900 text-white shadow-sm"
+                        : "shrink-0 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 text-slate-700 hover:bg-slate-200";
+                }
+                if (mobBtns[k]) {
+                    mobBtns[k].className = k === tab
+                        ? "flex flex-col items-center justify-center py-1 rounded-xl text-amber-400 font-bold bg-slate-800"
+                        : "flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium";
+                }
+            });
+
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            renderStaffManual();
+        };
+
+        function renderPopularTags() {
+            const container = document.getElementById('popularTagsContainer');
+            if (!container) return;
+            const tags = ["NP-IN-001", "公告用書", "內科專師", "外科專師", "Harrison", "健康評估"];
+            container.innerHTML = tags.map(t => `
+                <button onclick="window.quickFilterTag('${t}')" class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-cgust-50 hover:text-cgust-700 text-slate-600 transition-colors">
+                    #${t}
+                </button>
+            `).join('');
+        }
+
+        window.setStatusFilter = function (status) {
+            state.statusFilter = status;
+            ['ALL', 'AVAILABLE', 'BORROWED'].forEach(s => {
+                const btn = document.getElementById('statusPill' + s);
+                if (btn) {
+                    btn.className = s === status
+                        ? "flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all bg-white text-cgust-600 shadow-sm"
+                        : "flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900";
+                }
+            });
+            renderMemberCatalog();
+        };
+
+        window.handleFilterChange = function () {
+            const kw = document.getElementById('searchInput').value.trim();
+            document.getElementById('clearSearchBtn').classList.toggle('hidden', !kw);
+            renderMemberCatalog();
+        };
+
+        window.clearSearchFilters = function () {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('specialtySelect').value = 'ALL';
+            document.getElementById('langTypeSelect').value = 'ALL';
+            document.getElementById('refSelect').value = 'ALL';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            window.setStatusFilter('ALL');
+        };
+
+        window.quickFilterTag = function (tag) {
+            document.getElementById('searchInput').value = tag;
+            window.handleFilterChange();
+        };
+
+        function renderMemberCatalog() {
+            const grid = document.getElementById('booksGrid');
+            const emptyState = document.getElementById('catalogEmptyState');
+            if (!grid) return;
+
+            const kw = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+            const specialty = document.getElementById('specialtySelect')?.value || 'ALL';
+            const langType = document.getElementById('langTypeSelect')?.value || 'ALL';
+            const refFilter = document.getElementById('refSelect')?.value || 'ALL';
+
+            document.getElementById('memberCatalogCountBadge').textContent = state.books.length;
+
+            const filtered = state.books.filter(b => {
+                const matchKw = !kw ||
+                    (b.bookCode || '').toLowerCase().includes(kw) ||
+                    (b.title || '').toLowerCase().includes(kw) ||
+                    (b.author || '').toLowerCase().includes(kw) ||
+                    (b.isbn || '').toLowerCase().includes(kw) ||
+                    (b.edition || '').toLowerCase().includes(kw) ||
+                    (b.tags || []).some(t => t.toLowerCase().includes(kw));
+
+                const matchSpec = specialty === 'ALL' || b.specialty === specialty;
+                const matchLang = langType === 'ALL' || b.langType === langType;
+                const matchRef = refFilter === 'ALL' || String(Boolean(b.isOfficialRef)) === refFilter;
+                const isAvail = (b.availableCopies ?? 1) > 0;
+                const matchStatus = state.statusFilter === 'ALL' ||
+                    (state.statusFilter === 'AVAILABLE' && isAvail) ||
+                    (state.statusFilter === 'BORROWED' && !isAvail);
+
+                return matchKw && matchSpec && matchLang && matchRef && matchStatus;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                document.getElementById('emptyStateText').textContent = kw
+                    ? `未找到與「${kw}」相關的書籍編號、書名或 ISBN，建議檢查錯字或清除過濾條件。`
+                    : `目前篩選條件下無符合的命題參考書。`;
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            const cartObj = getCurrentCartObj();
+
+            grid.innerHTML = filtered.map(book => {
+                const avail = book.availableCopies ?? 0;
+                const isAvailable = avail > 0;
+                const inCart = cartObj.items.includes(book.bookId);
+
+                return `
+                <article class="bg-white rounded-2xl border ${book.isOfficialRef ? 'border-amber-300/90 ring-1 ring-amber-200/50' : 'border-slate-200'} shadow-sm hover:shadow-md transition-all flex flex-col justify-between p-4 sm:p-5 space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 text-xs font-mono font-bold">${escapeHtml(book.bookCode || '未編號')}</span>
+                                ${getSpecialtyBadgeHtml(book.specialty)}
+                                ${getLangBadgeHtml(book.langType)}
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${isAvailable ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}">
+                                ${isAvailable ? `在庫可借 (${avail}冊)` : `全數借出中`}
+                            </span>
+                        </div>
+
+                        ${book.isOfficialRef ? `
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-300 text-amber-800 text-xs font-bold">
+                            <i class="ph-fill ph-star text-amber-500"></i>
+                            <span>衛福部/甄審委員會 公告參考書籍</span>
+                        </div>
+                        ` : `
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium">
+                            <i class="ph ph-bookmark-simple"></i>
+                            <span>一般命題補充參考用書</span>
+                        </div>
+                        `}
+
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="text-base font-bold text-slate-900 leading-snug">${escapeHtml(book.title)}</h3>
+                                <span class="shrink-0 px-2 py-0.5 rounded bg-slate-200 text-slate-800 text-[11px] font-bold">${escapeHtml(book.edition || '最新版')}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">作者：${escapeHtml(book.author)}</p>
+                            <p class="text-xs font-mono text-slate-600 mt-0.5 flex items-center gap-1">
+                                <i class="ph-bold ph-barcode text-slate-400"></i>
+                                <span>ISBN：${escapeHtml(book.isbn || '未登錄')}</span>
+                            </p>
+                        </div>
+
+                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            ${escapeHtml(book.summary || '尚無摘要')}
+                        </p>
+
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            ${(book.tags || []).map(tag => `
+                                <span onclick="window.quickFilterTag('${escapeHtml(tag)}')" class="cursor-pointer px-2 py-0.5 rounded-md text-[11px] font-medium bg-violet-50 text-violet-700 hover:bg-violet-100">
+                                    #${escapeHtml(tag)}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                        ${inCart ? `
+                            <button onclick="window.openCartModal()" class="w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-95">
+                                <i class="ph-bold ph-check-circle text-sm"></i>
+                                <span>已在借閱清單 (點此填寫寄送地址)</span>
+                            </button>
+                        ` : isAvailable ? `
+                            <button onclick="window.addToCart('${book.bookId}')" class="w-full py-2.5 px-3 rounded-xl bg-cgust-600 hover:bg-cgust-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-95">
+                                <i class="ph-bold ph-plus-circle text-sm"></i>
+                                <span>加入借閱清單</span>
+                            </button>
+                        ` : `
+                            <button disabled class="w-full py-2.5 px-3 rounded-xl bg-slate-100 text-slate-400 font-semibold text-xs flex items-center justify-center gap-1.5 cursor-not-allowed">
+                                <i class="ph-bold ph-prohibit text-sm"></i>
+                                <span>目前全數借出中</span>
+                            </button>
+                        `}
+                    </div>
+                </article>
+                `;
+            }).join('');
+        }
+
+        function renderMemberBorrows() {
+            const listEl = document.getElementById('myBorrowsList');
+            if (!listEl || !state.currentUser) return;
+
+            const targetEmail = state.currentUser.email.toLowerCase();
+            const myRecs = state.borrowRecords.filter(r => r.userId.toLowerCase() === targetEmail);
+            const activeCount = myRecs.filter(r => r.status === 'PENDING_SHIP' || r.status === 'ACTIVE').length;
+
+            document.getElementById('memberBorrowCountBadge').textContent = activeCount;
+            document.getElementById('myActiveCount').textContent = activeCount;
+
+            if (myRecs.length === 0) {
+                listEl.innerHTML = `<div class="py-10 text-center text-xs text-slate-400">您目前名下尚無借閱紀錄。</div>`;
+                return;
+            }
+
+            listEl.innerHTML = myRecs.map(r => {
+                let statusBadge = '';
+                if (r.status === 'PENDING_SHIP') statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">📦 訂單處理中（待專人寄出）</span>`;
+                else if (r.status === 'ACTIVE') statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">🚚 已寄出借用中 (${escapeHtml(r.trackingNo || '已寄出')})</span>`;
+                else statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">✅ 已歸還結案 (${escapeHtml(r.returnedAt || '已點收')})</span>`;
+
+                return `
+                    <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                ${statusBadge}
+                                <span class="px-2 py-0.5 rounded bg-slate-900 text-amber-300 text-xs font-mono font-bold">${escapeHtml(r.bookCode || 'NP-BK')}</span>
+                                <span class="text-sm font-bold text-slate-900">${escapeHtml(r.bookTitle)}</span>
+                                <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 text-[11px] font-bold">${escapeHtml(r.edition || '')}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-mono">單冊編號：${escapeHtml(r.copyCode || '-')} ｜ ISBN：${escapeHtml(r.isbn || '-')} ｜ 申請時間：${escapeHtml(r.borrowedAt)}</p>
+                            <p class="text-xs text-slate-600">📍 收件資訊：${escapeHtml(r.recipientName || r.userName)} ｜ ${escapeHtml(r.shippingAddress || '現場取書')}</p>
+                            <p class="text-xs text-rose-600 font-medium">📅 歸還期限提醒：請於 <strong>116年7月15日前</strong> 寄回長庚科技大學 葉欣儒助理收</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMemberRecommendations() {
+            const container = document.getElementById('memberMyRecommendationsList');
+            if (!container || !state.currentUser) return;
+
+            const targetEmail = state.currentUser.email.toLowerCase();
+            const myRecs = state.recommendations.filter(rec =>
+                (rec.recommenderEmail && rec.recommenderEmail.toLowerCase() === targetEmail) ||
+                rec.recommender.includes(state.currentUser.displayName)
+            );
+
+            if (myRecs.length === 0) {
+                container.innerHTML = `<div class="py-8 text-center text-xs text-slate-400">您目前尚未提交過推薦書單。</div>`;
+                return;
+            }
+
+            container.innerHTML = myRecs.map(rec => `
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            ${getSpecialtyBadgeHtml(rec.specialty)}
+                            ${getLangBadgeHtml(rec.langType)}
+                            <h4 class="text-sm font-bold text-slate-900">${escapeHtml(rec.title)}</h4>
+                        </div>
+                        <span class="text-xs text-slate-400">${rec.createdAt}</span>
+                    </div>
+                    <p class="text-xs text-slate-500">作者：${escapeHtml(rec.author)} ｜ ISBN：<span class="font-mono">${escapeHtml(rec.isbn)}</span></p>
+                    <p class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-100">💡 推薦理由：${escapeHtml(rec.reason)}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderMemberManual() {
+            const container = document.getElementById('memberManualContentBody');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 border-l-4 border-cgust-600 pl-3">
+                        <span>一、命題參考書借閱四步驟線上教學</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-0.5 rounded-full bg-cgust-600 text-white text-xs font-bold">步驟 1：檢索書籍編號與版本</span>
+                                <i class="ph-duotone ph-magnifying-glass text-xl text-cgust-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                於「館藏書庫與編號檢索」可依<strong>書籍編號</strong>（如 <code class="bg-white px-1 rounded">NP-IN-001</code>）、<strong>科別</strong>及<strong>語系</strong>篩選。標有金色「<strong>⭐ 衛福部/甄審委員會 公告參考書籍</strong>」徽章者為核心指定用書。
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-0.5 rounded-full bg-cgust-600 text-white text-xs font-bold">步驟 2：加入借閱清單（自動保留 5 天）</span>
+                                <i class="ph-duotone ph-list-checks text-xl text-cgust-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                點選書籍卡片下方的「<strong>加入借閱清單</strong>」，可一次跨科別勾選多本參考書。若選書途中先行登出，系統會自動為您的 E-mail <strong>保留借閱清單內容 5 天</strong>。
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-0.5 rounded-full bg-cgust-600 text-white text-xs font-bold">步驟 3：填寫寄送地址並送出借閱清單</span>
+                                <i class="ph-duotone ph-truck text-xl text-cgust-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                點擊右上角「<strong>借閱清單</strong>」，填寫收件人姓名、聯絡電話與詳細寄送地址（醫院科室或住家）。送出後系統立即產生含書籍編號之「<strong>電子借閱清單通知單</strong>」。
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-xs font-bold">步驟 4：物流追蹤與 116/7/15 前寄回規範</span>
+                                <i class="ph-duotone ph-calendar-check text-xl text-rose-600"></i>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                可隨時至「我的借閱紀錄」查看包裹單號。命題完成後，請務必於 <strong class="text-rose-600">116年7月15日前</strong> 將書籍寄回「<strong>33303 桃園市龜山區文化一路261號 長庚科技大學 葉欣儒助理收</strong>」。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateStaffKpis() {
+            state.books.forEach(recalcBookCopyCounts);
+            const totalCopies = state.books.reduce((acc, b) => acc + (b.copies ? b.copies.length : 0), 0);
+            const availCopies = state.books.reduce((acc, b) => acc + (b.copies ? b.copies.filter(c => c.status === 'AVAILABLE').length : 0), 0);
+            const lostCopies = state.books.reduce((acc, b) => acc + (b.copies ? b.copies.filter(c => c.status === 'LOST').length : 0), 0);
+            const officialCount = state.books.filter(b => b.isOfficialRef).length;
+            const pendingShip = state.borrowRecords.filter(r => r.status === 'PENDING_SHIP').length;
+            const activeBorrows = state.borrowRecords.filter(r => r.status === 'ACTIVE').length;
+            const returnedWait = state.borrowRecords.filter(r => r.status === 'RETURNED').length;
+
+            document.getElementById('kpiTotalCopies').textContent = totalCopies;
+            document.getElementById('kpiAvailableCopies').textContent = availCopies;
+            document.getElementById('kpiLostCopies').textContent = lostCopies;
+            document.getElementById('kpiOfficialRefCount').textContent = officialCount;
+            document.getElementById('kpiPendingShip').textContent = pendingShip;
+            document.getElementById('kpiActiveBorrows').textContent = activeBorrows;
+            document.getElementById('kpiReturnedWaitArchive').textContent = returnedWait;
+        }
+
+        window.renderStaffOrdersView = function () {
+            const recListEl = document.getElementById('adminBorrowRecordsList');
+            if (!recListEl || !state.currentUser || !isStaffRole(state.currentUser.role)) return;
+
+            const filterVal = document.getElementById('adminRecordFilter')?.value || 'ALL';
+            const isManagerOrAbove = ['admin', 'colleague'].includes(state.currentUser.role);
+
+            const borrowerMap = new Map();
+            state.borrowRecords.forEach(r => {
+                const key = r.userId || r.userName;
+                if (!borrowerMap.has(key)) {
+                    borrowerMap.set(key, {
+                        userId: key,
+                        userName: r.userName,
+                        recipientName: r.recipientName || r.userName,
+                        phone: r.phone || '-',
+                        shippingAddress: r.shippingAddress || '現場取書',
+                        records: []
+                    });
+                }
+                borrowerMap.get(key).records.push(r);
+            });
+
+            const borrowerGroups = Array.from(borrowerMap.values()).filter(group => {
+                if (filterVal === 'ALL') return true;
+                return group.records.some(r => r.status === filterVal);
+            });
+
+            if (borrowerGroups.length === 0) {
+                recListEl.innerHTML = `<div class="py-10 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">此篩選條件下尚無對應的借閱委員訂單。</div>`;
+                return;
+            }
+
+            recListEl.innerHTML = borrowerGroups.map(group => {
+                const isExpanded = Boolean(state.expandedBorrowers[group.userId]);
+                const pendingCnt = group.records.filter(r => r.status === 'PENDING_SHIP').length;
+                const activeCnt = group.records.filter(r => r.status === 'ACTIVE').length;
+                const returnedCnt = group.records.filter(r => r.status === 'RETURNED').length;
+                const archivedCnt = group.records.filter(r => r.status === 'ARCHIVED').length;
+
+                return `
+                <div class="rounded-2xl border ${pendingCnt > 0 ? 'border-amber-300 bg-amber-50/20' : 'border-slate-200 bg-white'} shadow-sm overflow-hidden transition-all">
+                    <div onclick="window.toggleBorrowerExpand('${escapeHtml(group.userId)}')" class="p-4 sm:px-5 cursor-pointer hover:bg-slate-50 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                        <div class="flex items-start sm:items-center gap-3">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${pendingCnt > 0 ? 'bg-amber-100 text-amber-700' : 'bg-slate-900 text-white'} flex items-center justify-center font-bold text-base shrink-0">
+                                <i class="ph-bold ${isExpanded ? 'ph-caret-down' : 'ph-caret-right'}"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-sm font-bold text-slate-900">${escapeHtml(group.userName)}</span>
+                                    <span class="text-xs text-slate-500 font-mono">(${escapeHtml(group.userId)})</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800">共借閱 ${group.records.length} 冊</span>
+                                </div>
+                                <p class="text-xs text-slate-600">
+                                    <i class="ph-fill ph-map-pin text-rose-500"></i>
+                                    <strong>收件人：</strong>${escapeHtml(group.recipientName)} ｜ <strong>電話：</strong>${escapeHtml(group.phone)} ｜ <strong>地址：</strong>${escapeHtml(group.shippingAddress)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 flex-wrap self-end lg:self-center" onclick="event.stopPropagation()">
+                            ${pendingCnt > 0 ? `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">📦 待寄出 ${pendingCnt}</span>` : ''}
+                            ${activeCnt > 0 ? `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">🚚 借出中 ${activeCnt}</span>` : ''}
+                            ${returnedCnt > 0 ? `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✅ 已點收 ${returnedCnt}</span>` : ''}
+                            ${archivedCnt > 0 ? `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">🗄️ 已歸檔 ${archivedCnt}</span>` : ''}
+
+                            ${pendingCnt > 0 ? `
+                                <button onclick="window.batchShipBorrowerOrders('${escapeHtml(group.userId)}')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm flex items-center gap-1">
+                                    <i class="ph-bold ph-truck"></i>
+                                    <span>整批登記寄出 (${pendingCnt})</span>
+                                </button>
+                            ` : ''}
+
+                            <button onclick="window.toggleBorrowerExpand('${escapeHtml(group.userId)}')" class="px-3 py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1">
+                                <span>${isExpanded ? '收合明細' : '展開圖書明細'}</span>
+                                <i class="ph-bold ${isExpanded ? 'ph-caret-up' : 'ph-caret-down'}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${isExpanded ? `
+                    <div class="bg-slate-50 border-t border-slate-200 p-3.5 sm:px-6 space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="ph-fill ph-books text-indigo-600"></i>
+                                <span>${escapeHtml(group.userName)} — 借閱圖書與編號明細</span>
+                            </span>
+                            ${(activeCnt + pendingCnt) > 1 ? `
+                                <button onclick="window.batchReturnBorrowerOrders('${escapeHtml(group.userId)}')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1 shadow-sm">
+                                    <i class="ph-bold ph-checks"></i>
+                                    <span>整批點收全部歸還書籍</span>
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        <div class="divide-y divide-slate-200 bg-white rounded-xl border border-slate-200 overflow-hidden">
+                            ${group.records.map((r, idx) => `
+                                <div class="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/70">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="text-xs font-mono font-bold text-slate-400">#${idx + 1}</span>
+                                            <span class="text-xs font-bold px-2 py-0.5 rounded ${
+                                                r.status === 'PENDING_SHIP' ? 'bg-amber-100 text-amber-800' :
+                                                r.status === 'ACTIVE' ? 'bg-blue-100 text-blue-800' :
+                                                r.status === 'RETURNED' ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800'
+                                            }">
+                                                ${r.status === 'PENDING_SHIP' ? '📦 待寄出包裹' : r.status === 'ACTIVE' ? '🚚 已寄出借用中' : r.status === 'RETURNED' ? '✅ 已點收待歸檔' : '🗄️ 已結案歸檔'}
+                                            </span>
+                                            <span class="px-2 py-0.5 rounded bg-indigo-600 text-white text-xs font-mono font-bold">${escapeHtml(r.bookCode || 'NP-BK')}</span>
+                                            <span class="text-sm font-bold text-slate-900">${escapeHtml(r.bookTitle)}</span>
+                                            <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 text-[10px] font-bold">${escapeHtml(r.edition)}</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 font-mono">
+                                            單冊編號：<strong>${escapeHtml(r.copyCode || '-')}</strong> ｜ 資產編號：<strong>${escapeHtml(r.assetId || '-')}</strong> ｜ 申請：${r.borrowedAt} ｜ 物流：${escapeHtml(r.trackingNo || '未登錄')}
+                                            ${r.returnedAt ? ` ｜ <strong class="text-emerald-700">歸還點收：${r.returnedAt}</strong>` : ''}
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                                        ${r.status === 'PENDING_SHIP' ? `
+                                            <button onclick="window.markRecordShipped('${r.recordId}')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1">
+                                                <i class="ph-bold ph-package"></i>
+                                                <span>登記寄出</span>
+                                            </button>
+                                        ` : ''}
+                                        ${(r.status === 'ACTIVE' || r.status === 'PENDING_SHIP') ? `
+                                            <button onclick="window.handleReturnBook('${r.recordId}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1">
+                                                <i class="ph-bold ph-check-circle"></i>
+                                                <span>點收歸還 (+1)</span>
+                                            </button>
+                                        ` : ''}
+                                        ${(r.status === 'RETURNED' && isManagerOrAbove) ? `
+                                            <button onclick="window.archiveReturnedRecord('${r.recordId}')" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1">
+                                                <i class="ph-bold ph-archive-box"></i>
+                                                <span>封存歸檔</span>
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+                `;
+            }).join('');
+        };
+
+        window.renderStaffAllBooksView = function () {
+            const container = document.getElementById('staffAllBooksContainer');
+            if (!container || !state.currentUser || !isStaffRole(state.currentUser.role)) return;
+
+            const kw = (document.getElementById('allBooksSearchInput')?.value || '').trim().toLowerCase();
+            const specFilter = document.getElementById('allBooksSpecialtyFilter')?.value || 'ALL';
+
+            const filtered = state.books.filter(b => {
+                recalcBookCopyCounts(b);
+                const matchSpec = specFilter === 'ALL' || b.specialty === specFilter;
+                const matchKw = !kw ||
+                    (b.bookCode || '').toLowerCase().includes(kw) ||
+                    (b.title || '').toLowerCase().includes(kw) ||
+                    (b.isbn || '').toLowerCase().includes(kw) ||
+                    (b.copies || []).some(c =>
+                        (c.copyCode || '').toLowerCase().includes(kw) ||
+                        (c.assetId || '').toLowerCase().includes(kw) ||
+                        (c.borrowerName || '').toLowerCase().includes(kw)
+                    );
+                return matchSpec && matchKw;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-2 py-10 text-center text-xs text-slate-400">查無符合條件之書籍或資產編號。</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(b => {
+                const availCnt = b.copies.filter(c => c.status === 'AVAILABLE').length;
+                const borrowedCnt = b.copies.filter(c => c.status === 'BORROWED').length;
+                const lostCnt = b.copies.filter(c => c.status === 'LOST').length;
+
+                return `
+                <div onclick="window.openBookCopiesModal('${b.bookId}')" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-indigo-400 shadow-sm hover:shadow-md transition-all p-4 sm:p-5 flex flex-col justify-between space-y-3.5">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white text-xs font-mono font-bold">${escapeHtml(b.bookCode)}</span>
+                                ${getSpecialtyBadgeHtml(b.specialty)}
+                                ${getLangBadgeHtml(b.langType)}
+                                ${b.isOfficialRef ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[11px] font-bold">⭐ 公告書</span>` : ''}
+                            </div>
+                            <span class="text-xs font-bold text-indigo-600 flex items-center gap-1">
+                                <span>點此看單冊明細</span>
+                                <i class="ph-bold ph-arrow-square-out"></i>
+                            </span>
+                        </div>
+
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="text-sm sm:text-base font-bold text-slate-900">${escapeHtml(b.title)}</h3>
+                                <span class="shrink-0 px-2 py-0.5 rounded bg-slate-800 text-white text-[11px] font-bold">${escapeHtml(b.edition)}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-mono mt-0.5">ISBN：${escapeHtml(b.isbn)} ｜ 作者：${escapeHtml(b.author)}</p>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-200/80 space-y-1.5">
+                            <div class="text-[11px] font-bold text-slate-600 flex items-center justify-between">
+                                <span>單冊資產編號與即時狀態（共 ${b.copies.length} 冊）：</span>
+                                <span>🟢在庫 ${availCnt} / 🔵借出 ${borrowedCnt} / 🔴遺失 ${lostCnt}</span>
+                            </div>
+                            <div class="space-y-1 max-h-28 overflow-y-auto pr-1">
+                                ${b.copies.map(c => `
+                                    <div class="flex items-center justify-between text-[11px] bg-white px-2.5 py-1 rounded-lg border border-slate-200/70">
+                                        <span class="font-mono font-semibold text-slate-700">${escapeHtml(c.copyCode)} <span class="text-slate-400">(${escapeHtml(c.assetId)})</span></span>
+                                        ${c.status === 'AVAILABLE' ? `
+                                            <span class="font-bold text-emerald-600">🟢 在庫</span>
+                                        ` : c.status === 'BORROWED' ? `
+                                            <span class="font-bold text-blue-600 truncate max-w-[170px]">🔵 借出：${escapeHtml(c.borrowerName || '命題委員')}</span>
+                                        ` : `
+                                            <span class="font-bold text-rose-600">🔴 遺失 (${escapeHtml(c.borrowerName || '待查')})</span>
+                                        `}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        };
+
+        window.openBookCopiesModal = function (bookId) {
+            const book = state.books.find(b => b.bookId === bookId);
+            if (!book) return;
+            state.activeDetailBookId = bookId;
+            recalcBookCopyCounts(book);
+
+            document.getElementById('detailModalBookCode').textContent = book.bookCode || '未編號';
+            document.getElementById('detailModalEdition').textContent = book.edition || '最新版';
+            document.getElementById('detailModalSpecialty').innerHTML = `${getSpecialtyBadgeHtml(book.specialty)} ${getLangBadgeHtml(book.langType)}`;
+            document.getElementById('detailModalTitle').textContent = book.title;
+            document.getElementById('detailModalSubInfo').textContent = `作者：${book.author} ｜ ISBN：${book.isbn} ｜ 總冊數：${book.copies.length} 冊`;
+
+            const editBtn = document.getElementById('detailModalEditBookBtn');
+            if (editBtn) {
+                editBtn.onclick = function () {
+                    window.closeBookCopiesModal();
+                    window.openBookModal(book.bookId);
+                };
+            }
+
+            renderDetailModalCopiesList(book);
+
+            const modal = document.getElementById('bookCopiesDetailModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        function renderDetailModalCopiesList(book) {
+            const listEl = document.getElementById('detailModalCopiesList');
+            const isMaintainer = state.currentUser && state.currentUser.role === 'admin';
+
+            listEl.innerHTML = book.copies.map((c, idx) => `
+                <div class="p-3.5 rounded-xl border ${
+                    c.status === 'AVAILABLE' ? 'bg-emerald-50/30 border-emerald-200' :
+                    c.status === 'BORROWED' ? 'bg-blue-50/40 border-blue-200' : 'bg-rose-50/40 border-rose-300'
+                } flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 text-amber-300 text-xs font-mono font-bold">${escapeHtml(c.copyCode)}</span>
+                            <span class="px-2.5 py-0.5 rounded-md bg-white border border-slate-300 text-slate-800 text-xs font-mono font-bold">資產編號：${escapeHtml(c.assetId)}</span>
+                            ${c.status === 'AVAILABLE' ? `
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">🟢 在庫可借閱</span>
+                            ` : c.status === 'BORROWED' ? `
+                                <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">🔵 借出中</span>
+                            ` : `
+                                <span class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs font-bold">🔴 遺失 / 未歸還</span>
+                            `}
+                        </div>
+                        <p class="text-xs text-slate-600">
+                            ${c.status === 'AVAILABLE'
+                                ? '目前存放於專師甄審書庫，可供命題委員勾選借閱。'
+                                : c.status === 'BORROWED'
+                                ? `👤 <strong>目前借閱人：</strong><span class="text-blue-700 font-bold">${escapeHtml(c.borrowerName || '命題委員')}</span> ${c.borrowerEmail ? `(${escapeHtml(c.borrowerEmail)})` : ''} ｜ 借出日期：${escapeHtml(c.borrowedAt || '已登記')}`
+                                : `⚠️ <strong>盤點狀態說明：</strong><span class="text-rose-700 font-bold">${escapeHtml(c.borrowerName || '盤點遺失待尋')}</span>`
+                            }
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                        ${c.status !== 'AVAILABLE' ? `
+                            <button onclick="window.setSingleCopyStatus('${book.bookId}', ${idx}, 'AVAILABLE')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">
+                                轉為在庫
+                            </button>
+                        ` : ''}
+                        ${c.status !== 'LOST' ? `
+                            <button onclick="window.setSingleCopyStatus('${book.bookId}', ${idx}, 'LOST')" class="px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold">
+                                標記遺失
+                            </button>
+                        ` : ''}
+                        ${isMaintainer ? `
+                            <button onclick="window.deleteSingleCopy('${book.bookId}', ${idx})" title="維護者專屬：刪除此單冊" class="p-1.5 rounded-lg border border-slate-300 hover:bg-rose-600 hover:text-white text-slate-500 text-xs">
+                                <i class="ph-bold ph-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.closeBookCopiesModal = function () {
+            const modal = document.getElementById('bookCopiesDetailModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            state.activeDetailBookId = null;
+        };
+
+        window.setSingleCopyStatus = function (bookId, copyIdx, newStatus) {
+            const book = state.books.find(b => b.bookId === bookId);
+            if (!book || !book.copies[copyIdx]) return;
+            const copy = book.copies[copyIdx];
+            copy.status = newStatus;
+            if (newStatus === 'AVAILABLE') {
+                copy.borrowerName = null;
+                copy.borrowerEmail = null;
+                copy.borrowedAt = null;
+            } else if (newStatus === 'LOST') {
+                copy.borrowerName = copy.borrowerName ? `${copy.borrowerName} (逾期未還/遺失)` : '盤點標記遺失';
+            }
+            recalcBookCopyCounts(book);
+            renderDetailModalCopiesList(book);
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`已更新單冊 ${copy.copyCode} (${copy.assetId}) 狀態！`, 'success');
+        };
+
+        window.deleteSingleCopy = function (bookId, copyIdx) {
+            const book = state.books.find(b => b.bookId === bookId);
+            if (!book || book.copies.length <= 1) {
+                showToast('每種書籍至少需保留 1 冊紀錄。', 'warning');
+                return;
+            }
+            const removed = book.copies.splice(copyIdx, 1)[0];
+            recalcBookCopyCounts(book);
+            renderDetailModalCopiesList(book);
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`已移除單冊 ${removed.copyCode}。`, 'info');
+        };
+
+        window.renderStaffInventoryView = function () {
+            const auditEl = document.getElementById('inventoryAuditList');
+            if (!auditEl || !state.currentUser || !isStaffRole(state.currentUser.role)) return;
+
+            const kw = (document.getElementById('staffInventorySearch')?.value || '').trim().toLowerCase();
+            const isSuperMaintainer = state.currentUser.role === 'admin';
+
+            const filteredBooks = state.books.filter(b =>
+                !kw ||
+                (b.bookCode || '').toLowerCase().includes(kw) ||
+                (b.title || '').toLowerCase().includes(kw) ||
+                (b.isbn || '').toLowerCase().includes(kw) ||
+                (b.specialty || '').toLowerCase().includes(kw)
+            );
+
+            auditEl.innerHTML = filteredBooks.map(b => {
+                recalcBookCopyCounts(b);
+                const availCnt = b.copies.filter(c => c.status === 'AVAILABLE').length;
+                const borrowedCnt = b.copies.filter(c => c.status === 'BORROWED').length;
+                const lostCnt = b.copies.filter(c => c.status === 'LOST').length;
+
+                return `
+                    <div class="p-3.5 sm:p-4 rounded-xl border ${lostCnt > 0 ? 'bg-rose-50/40 border-rose-200' : borrowedCnt > 0 ? 'bg-amber-50/40 border-amber-200' : 'bg-slate-50 border-slate-200'} flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded bg-indigo-600 text-white text-xs font-mono font-bold">${escapeHtml(b.bookCode)}</span>
+                                ${getSpecialtyBadgeHtml(b.specialty)}
+                                ${getLangBadgeHtml(b.langType)}
+                                <span class="text-sm font-bold text-slate-900">${escapeHtml(b.title)}</span>
+                                <span class="px-2 py-0.5 rounded bg-slate-800 text-white text-[10px] font-bold">${escapeHtml(b.edition)}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-mono">
+                                採購總數: <strong>${b.totalCopies}</strong> 冊 ｜
+                                🟢 在庫: <strong class="text-emerald-600">${availCnt}</strong> 冊 ｜
+                                🔵 借出中: <strong class="text-blue-600">${borrowedCnt}</strong> 冊 ｜
+                                🔴 遺失/未還: <strong class="${lostCnt > 0 ? 'text-rose-600 underline' : 'text-slate-500'}">${lostCnt}</strong> 冊
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                            <button onclick="window.openBookCopiesModal('${b.bookId}')" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1 shadow-sm">
+                                <i class="ph-bold ph-list-magnifying-glass"></i>
+                                <span>點此核對單冊資產編號</span>
+                            </button>
+                            ${isSuperMaintainer ? `
+                                <button onclick="window.addSingleCopyToBook('${b.bookId}')" title="維護者專屬：新增1冊資產" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold">+1冊</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.addSingleCopyToBook = function (bookId) {
+            const book = state.books.find(b => b.bookId === bookId);
+            if (!book) return;
+            const nextNum = (book.copies?.length || 0) + 1;
+            book.copies.push({
+                copyCode: `${book.bookCode}-C${nextNum}`,
+                assetId: `CGUST-A${Math.floor(1000 + Math.random() * 8999)}`,
+                status: 'AVAILABLE',
+                borrowerName: null,
+                borrowerEmail: null,
+                borrowedAt: null
+            });
+            recalcBookCopyCounts(book);
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`已為《[${book.bookCode}] ${book.title}》新增第 ${nextNum} 冊資產編號！`, 'success');
+        };
+
+        function renderStaffManual() {
+            const container = document.getElementById('staffManualDynamicBody');
+            const badgeEl = document.getElementById('staffManualRoleBadge');
+            const titleEl = document.getElementById('staffManualMainTitle');
+            const subEl = document.getElementById('staffManualSubTitle');
+            if (!container || !state.currentUser) return;
+
+            if (state.currentUser.role === 'assistant') {
+                badgeEl.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                badgeEl.textContent = "📦 行政人員線上操作指南";
+                titleEl.textContent = "專科護理師甄審書庫系統 — 行政人員操作指南";
+                subEl.textContent = "涵蓋書籍重新編號建檔、委員借閱訂單裝箱寄送、歸還點收與單冊資產查詢";
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2.5">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-violet-600 text-white text-xs font-bold">作業 1：館藏書庫重新編號建檔</span>
+                            <h4 class="text-sm font-bold text-slate-900">獨立建檔與自動產生資產編號</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                點選「<strong>③ 館藏書庫建檔</strong>」，可透過 CSV 批次匯入含「自編書籍編號（如 <code class="bg-white px-1 rounded">NP-IN-001</code>）」之清冊，系統會依採購冊數自動建立每一本的單冊編號與資產編號。
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2.5">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-blue-600 text-white text-xs font-bold">作業 2：依委員名單裝箱寄出</span>
+                            <h4 class="text-sm font-bold text-slate-900">核對書籍編號與單冊號寄出</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                於「<strong>① 委員借閱訂單總表</strong>」展開委員列，依畫面指派的「自編書籍編號 + 單冊資產編號」取書裝箱，點擊「<strong>整批登記寄出</strong>」。
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2.5">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-emerald-600 text-white text-xs font-bold">作業 3：拆封點收與單冊狀態恢復</span>
+                            <h4 class="text-sm font-bold text-slate-900">一鍵點收自動恢復在庫</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                收到委員寄回之書籍包裹後，展開該委員明細並點擊「<strong>點收歸還 (+1)</strong>」，該單冊狀態即自動由「借出中」恢復為「🟢 在庫」。
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                badgeEl.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-300";
+                badgeEl.textContent = "👥 管理員線上操作指南";
+                titleEl.textContent = "專科護理師甄審書庫系統 — 管理員操作指南";
+                subEl.textContent = "涵蓋全部書籍單冊狀態檢視、館藏建檔、對帳盤點與訂單歸檔作業";
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="font-bold text-amber-700">① 委員借閱訂單總表</div>
+                            <p class="text-slate-600 leading-relaxed">以借閱委員為單位展開其借閱之所有「書籍編號 + 書名 + 資產編號」，支援寄送追蹤、點收與最終「<strong>封存歸檔</strong>」。</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="font-bold text-indigo-700">② 全部書籍清單 (單冊狀態)</div>
+                            <p class="text-slate-600 leading-relaxed">點擊任一本書即可開啟「單冊明細視窗」，查看每一本實體書的<strong>資產編號</strong>、<strong>自編編號</strong>以及目前是「🟢在庫」、「🔵借給哪位委員」或「🔴遺失」。</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="font-bold text-violet-700">③ 館藏書庫建檔 (獨立分頁)</div>
+                            <p class="text-slate-600 leading-relaxed">支援重新編號後之 CSV 批次建檔與單本 AI 智慧建檔，建檔與盤點完全分離，避免誤觸。</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="font-bold text-emerald-700">④ 對帳盤點 (獨立分頁)</div>
+                            <p class="text-slate-600 leading-relaxed">一覽所有書籍之「採購總冊數 vs 在庫 vs 借出 vs 遺失」，點擊即可進入單冊明細標記遺失或轉回在庫。</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        window.addToCart = async function (bookId) {
+            if (!state.currentUser) {
+                window.openAuthModal();
+                return;
+            }
+            const cartObj = getCurrentCartObj();
+            if (!cartObj.items.includes(bookId)) {
+                cartObj.items.push(bookId);
+                await persistCartToCloud();
+            }
+            updateMemberHeaderUI();
+            renderMemberCatalog();
+            const book = state.books.find(b => b.bookId === bookId);
+            showToast(`已將《[${book ? book.bookCode : ''}] ${book ? book.title : ''}》加入借閱清單！登出後將為您保留 5 天。`, 'success');
+        };
+
+        window.removeFromCart = async function (bookId) {
+            const cartObj = getCurrentCartObj();
+            cartObj.items = cartObj.items.filter(id => id !== bookId);
+            await persistCartToCloud();
+            updateMemberHeaderUI();
+            renderCartModalItems();
+            renderMemberCatalog();
+        };
+
+        window.openCartModal = function () {
+            if (!state.currentUser) {
+                window.openAuthModal();
+                return;
+            }
+            const shipRecipient = document.getElementById('shipRecipient');
+            if (shipRecipient && !shipRecipient.value) {
+                shipRecipient.value = state.currentUser.displayName;
+            }
+            renderCartModalItems();
+            document.getElementById('cartModal').classList.remove('hidden');
+            document.getElementById('cartModal').classList.add('flex');
+        };
+
+        window.closeCartModal = function () {
+            document.getElementById('cartModal').classList.add('hidden');
+            document.getElementById('cartModal').classList.remove('flex');
+        };
+
+        function renderCartModalItems() {
+            const container = document.getElementById('cartItemsContainer');
+            const subEl = document.getElementById('cartModalRetentionSub');
+            const submitBtn = document.getElementById('checkoutSubmitBtn');
+            const cartObj = getCurrentCartObj();
+            const remainDays = getRemainingRetentionDays();
+
+            if (subEl) {
+                subEl.textContent = `⏱️ 您的借閱清單內容於登出後將保留 ${remainDays} 天（最長 5 天），請確認書籍編號與版本後填寫寄送地址`;
+            }
+
+            if (cartObj.items.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-slate-500 text-xs">
+                        目前借閱清單是空的，請先從書庫勾選您命題所需的參考書籍。
+                    </div>
+                `;
+                if (submitBtn) submitBtn.disabled = true;
+                return;
+            }
+
+            if (submitBtn) submitBtn.disabled = false;
+            container.innerHTML = cartObj.items.map(bookId => {
+                const b = state.books.find(x => x.bookId === bookId);
+                if (!b) return '';
+                return `
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-2 py-0.5 rounded bg-slate-900 text-amber-300 text-[11px] font-mono font-bold">${escapeHtml(b.bookCode)}</span>
+                                <span class="text-xs font-bold text-slate-900">${escapeHtml(b.title)}</span>
+                                <span class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-800 text-[10px] font-bold">${escapeHtml(b.edition)}</span>
+                                ${b.isOfficialRef ? `<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">⭐ 公告參考書</span>` : ''}
+                            </div>
+                            <p class="text-[11px] text-slate-500 font-mono">ISBN: ${escapeHtml(b.isbn)} ｜ 科別: ${escapeHtml(b.specialty)} (${escapeHtml(b.langType)})</p>
+                        </div>
+                        <button type="button" onclick="window.removeFromCart('${b.bookId}')" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg">
+                            <i class="ph-bold ph-trash text-base"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.submitCartCheckout = async function (e) {
+            e.preventDefault();
+            const cartObj = getCurrentCartObj();
+            if (cartObj.items.length === 0) return;
+
+            const recipient = document.getElementById('shipRecipient').value.trim();
+            const phone = document.getElementById('shipPhone').value.trim();
+            const address = document.getElementById('shipAddress').value.trim();
+            const note = document.getElementById('shipNote').value.trim();
+            const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+
+            const borrowedBooksSummary = [];
+
+            for (const bookId of cartObj.items) {
+                const book = state.books.find(b => b.bookId === bookId);
+                if (!book) continue;
+                recalcBookCopyCounts(book);
+
+                const availCopy = book.copies.find(c => c.status === 'AVAILABLE');
+                if (!availCopy) continue;
+
+                availCopy.status = 'BORROWED';
+                availCopy.borrowerName = state.currentUser.displayName;
+                availCopy.borrowerEmail = state.currentUser.email;
+                availCopy.borrowedAt = nowStr.slice(0, 10);
+
+                recalcBookCopyCounts(book);
+
+                const newRec = {
+                    recordId: 'rec-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+                    bookId: book.bookId,
+                    bookCode: book.bookCode,
+                    copyCode: availCopy.copyCode,
+                    assetId: availCopy.assetId,
+                    bookTitle: book.title,
+                    edition: book.edition,
+                    isbn: book.isbn,
+                    userId: state.currentUser.email,
+                    userName: state.currentUser.displayName,
+                    recipientName: recipient,
+                    phone: phone,
+                    shippingAddress: address + (note ? ` (${note})` : ''),
+                    borrowedAt: nowStr,
+                    dueDate: "116年7月15日前",
+                    returnedAt: null,
+                    status: "PENDING_SHIP",
+                    trackingNo: "待行政人員寄出"
+                };
+
+                state.borrowRecords.unshift(newRec);
+                state.expandedBorrowers[state.currentUser.email] = true;
+                borrowedBooksSummary.push({ book, copy: availCopy });
+            }
+
+            cartObj.items = [];
+            await persistCartToCloud();
+            window.closeCartModal();
+
+            const receiptHtml = `
+                <div class="space-y-1.5">
+                    <p><strong>收件委員：</strong>${escapeHtml(recipient)} (${escapeHtml(state.currentUser.email)})</p>
+                    <p><strong>聯絡電話：</strong>${escapeHtml(phone)}</p>
+                    <p><strong>寄送地址：</strong>${escapeHtml(address)} ${note ? `(${escapeHtml(note)})` : ''}</p>
+                    <p><strong>申請時間：</strong>${nowStr}</p>
+                </div>
+                <div class="border-t border-b border-slate-200 py-2.5 my-2 space-y-2">
+                    <p class="font-bold text-slate-900">📚 本次借用命題參考書清單（共 ${borrowedBooksSummary.length} 本）：</p>
+                    ${borrowedBooksSummary.map((item, idx) => `
+                        <div class="pl-2.5 border-l-2 border-cgust-500">
+                            <p class="font-semibold text-slate-800">${idx + 1}. [${escapeHtml(item.book.bookCode)}] 《${escapeHtml(item.book.title)}》 (${escapeHtml(item.book.edition)})</p>
+                            <p class="text-[11px] text-slate-500 font-mono">單冊編號：${escapeHtml(item.copy.copyCode)} (資產編號：${escapeHtml(item.copy.assetId)}) ｜ ISBN：${escapeHtml(item.book.isbn)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-900 space-y-1">
+                    <p class="font-bold">⚠️ 命題繳交與書籍歸還重要提醒：</p>
+                    <p>• 歸還期限：<strong>${RETURN_DEADLINE_TEXT}</strong>。</p>
+                    <p>• 寄回地址：<strong>33303 桃園市龜山區文化一路261號（長庚科技大學 專科護理師甄審計畫 葉欣儒助理收）</strong>。</p>
+                </div>
+            `;
+
+            document.getElementById('emailReceiptContent').innerHTML = receiptHtml;
+            document.getElementById('emailReceiptModal').classList.remove('hidden');
+            document.getElementById('emailReceiptModal').classList.add('flex');
+
+            updateMemberHeaderUI();
+            renderMemberCatalog();
+            renderMemberBorrows();
+            showToast("借閱清單已成功送出！已產生含書籍編號之電子通知單。", "success");
+        };
+
+        window.closeEmailReceiptModal = function () {
+            document.getElementById('emailReceiptModal').classList.add('hidden');
+            document.getElementById('emailReceiptModal').classList.remove('flex');
+            window.switchMemberTab('my-borrows');
+        };
+
+        window.copyReceiptText = function () {
+            const text = document.getElementById('emailReceiptContent').innerText;
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast("已複製借閱清單文字內容！", "success");
+        };
+
+        window.toggleBorrowerExpand = function (userId) {
+            state.expandedBorrowers[userId] = !state.expandedBorrowers[userId];
+            window.renderStaffOrdersView();
+        };
+
+        window.markRecordShipped = function (recordId) {
+            const rec = state.borrowRecords.find(r => r.recordId === recordId);
+            if (!rec) return;
+            rec.status = 'ACTIVE';
+            rec.trackingNo = '郵局掛號 #' + Math.floor(100000 + Math.random() * 900000);
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            showToast(`已登記《[${rec.bookCode}] ${rec.bookTitle}》包裹寄出！單號：${rec.trackingNo}`, 'success');
+        };
+
+        window.batchShipBorrowerOrders = function (userId) {
+            const pendingRecs = state.borrowRecords.filter(r => r.userId === userId && r.status === 'PENDING_SHIP');
+            if (pendingRecs.length === 0) return;
+            const sharedTracking = '郵局掛號 #' + Math.floor(100000 + Math.random() * 900000);
+            pendingRecs.forEach(r => {
+                r.status = 'ACTIVE';
+                r.trackingNo = sharedTracking;
+            });
+            state.expandedBorrowers[userId] = true;
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            showToast(`已將該委員名下 ${pendingRecs.length} 本待寄書籍整批登記寄出（單號：${sharedTracking}）！`, 'success');
+        };
+
+        window.handleReturnBook = function (recordId) {
+            const rec = state.borrowRecords.find(r => r.recordId === recordId);
+            if (!rec || rec.status === 'RETURNED' || rec.status === 'ARCHIVED') return;
+
+            rec.status = 'RETURNED';
+            rec.returnedAt = new Date().toISOString().slice(0, 16).replace('T', ' ');
+
+            const book = state.books.find(b => b.bookId === rec.bookId);
+            if (book && book.copies) {
+                const targetCopy = book.copies.find(c => c.copyCode === rec.copyCode) || book.copies.find(c => c.status === 'BORROWED');
+                if (targetCopy) {
+                    targetCopy.status = 'AVAILABLE';
+                    targetCopy.borrowerName = null;
+                    targetCopy.borrowerEmail = null;
+                    targetCopy.borrowedAt = null;
+                }
+                recalcBookCopyCounts(book);
+            }
+
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`已完成《[${rec.bookCode}] ${rec.bookTitle}》點收歸還，單冊 ${rec.copyCode || ''} 已恢復為在庫！`, 'success');
+        };
+
+        window.batchReturnBorrowerOrders = function (userId) {
+            const activeRecs = state.borrowRecords.filter(r => r.userId === userId && (r.status === 'ACTIVE' || r.status === 'PENDING_SHIP'));
+            if (activeRecs.length === 0) return;
+            const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            activeRecs.forEach(r => {
+                r.status = 'RETURNED';
+                r.returnedAt = nowStr;
+                const book = state.books.find(b => b.bookId === r.bookId);
+                if (book && book.copies) {
+                    const targetCopy = book.copies.find(c => c.copyCode === r.copyCode) || book.copies.find(c => c.status === 'BORROWED');
+                    if (targetCopy) {
+                        targetCopy.status = 'AVAILABLE';
+                        targetCopy.borrowerName = null;
+                        targetCopy.borrowerEmail = null;
+                        targetCopy.borrowedAt = null;
+                    }
+                    recalcBookCopyCounts(book);
+                }
+            });
+            state.expandedBorrowers[userId] = true;
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`已整批點收該委員歸還之 ${activeRecs.length} 本書籍，全數單冊已恢復為在庫！`, 'success');
+        };
+
+        window.archiveReturnedRecord = function (recordId) {
+            if (!state.currentUser || !['admin', 'colleague'].includes(state.currentUser.role)) {
+                showToast("此操作需管理員權限。", "warning");
+                return;
+            }
+            const rec = state.borrowRecords.find(r => r.recordId === recordId);
+            if (!rec) return;
+            rec.status = 'ARCHIVED';
+            updateStaffKpis();
+            window.renderStaffOrdersView();
+            showToast(`已將借閱單 (${rec.bookCode}) 正式封存歸檔！`, 'success');
+        };
+
+        window.loadSampleCsvTemplate = function () {
+            document.getElementById('bulkCsvInput').value =
+`NP-SU-002,急症與重症護理學,胡勝川等,外科,中文,第6版,4,978-986-194-711-2,true
+NP-GN-002,Bates' Guide to Physical Examination,Lynn S. Bickley,通論,西文,13th Edition,3,978-1-4963-9817-8,true
+NP-PS-002,精神科專科護理臨床指引,台灣專科護理師學會,精神科,中文,第3版,5,978-986-987-205-8,false`;
+            showToast("已載入含「自編書籍編號」之 CSV 範例格式！", "info");
+        };
+
+        window.handleBulkImport = function () {
+            const raw = document.getElementById('bulkCsvInput').value.trim();
+            if (!raw) {
+                showToast("請先貼上 CSV 資料或點擊載入範本！", "warning");
+                return;
+            }
+            const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+            let count = 0;
+            lines.forEach((line, lineIdx) => {
+                const parts = line.split(',').map(s => s.trim());
+                if (parts.length >= 7) {
+                    const [bookCode, title, author, specialty, langType, edition, copiesStr, isbn, isOfficialStr] = parts;
+                    const copiesCnt = parseInt(copiesStr, 10) || 3;
+                    const isOfficial = String(isOfficialStr).toLowerCase() !== 'false';
+                    const cleanCode = bookCode || `NP-BK-10${lineIdx}`;
+                    const generatedCopies = [];
+                    for (let i = 1; i <= copiesCnt; i++) {
+                        generatedCopies.push({
+                            copyCode: `${cleanCode}-C${i}`,
+                            assetId: `CGUST-A${Math.floor(1000 + Math.random() * 8999)}`,
+                            status: 'AVAILABLE',
+                            borrowerName: null,
+                            borrowerEmail: null,
+                            borrowedAt: null
+                        });
+                    }
+                    state.books.unshift({
+                        bookId: 'bk-csv-' + Date.now() + '-' + count,
+                        bookCode: cleanCode,
+                        title,
+                        author,
+                        specialty: specialty || '通論',
+                        langType: langType === '西文' ? '西文' : '中文',
+                        edition: edition || '最新版',
+                        totalCopies: copiesCnt,
+                        availableCopies: copiesCnt,
+                        isbn: isbn || '978-986-000-000-0',
+                        isOfficialRef: isOfficial,
+                        status: 'AVAILABLE',
+                        summary: `由後台批次重新編號匯入之${specialty}命題參考用書（編號：${cleanCode}，${edition}）。`,
+                        tags: [cleanCode, specialty, langType, isOfficial ? "公告用書" : "一般館藏"],
+                        copies: generatedCopies
+                    });
+                    count++;
+                }
+            });
+            document.getElementById('bulkCsvInput').value = '';
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast(`成功批次匯入並建立 ${count} 種書籍與單冊資產編號！`, "success");
+        };
+
+        window.handleRecommendSubmit = function (e) {
+            e.preventDefault();
+            const title = document.getElementById('recTitle').value.trim();
+            const author = document.getElementById('recAuthor').value.trim();
+            const isbn = document.getElementById('recIsbn').value.trim();
+            const specialty = document.getElementById('recSpecialty').value;
+            const langType = document.getElementById('recLang').value;
+            const reason = document.getElementById('recReason').value.trim();
+
+            state.recommendations.unshift({
+                recId: 'rec-' + Date.now(),
+                title, author, isbn: isbn || '未提供', specialty, langType, reason,
+                recommender: state.currentUser ? state.currentUser.displayName : '命題委員',
+                recommenderEmail: state.currentUser ? state.currentUser.email : '',
+                createdAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
+            });
+
+            e.target.reset();
+            renderMemberRecommendations();
+            showToast("感謝委員推薦！已送交後台管理團隊進行採購評估。", "success");
+        };
+
+        window.exportAllBorrowsCsv = function () {
+            const headers = ["紀錄ID", "狀態", "自編書籍編號", "單冊編號", "資產編號", "書名", "版次", "ISBN", "借用委員", "收件人", "聯絡電話", "寄送地址", "借出時間", "應還期限", "實際歸還時間"];
+            const rows = state.borrowRecords.map(r => [
+                r.recordId, r.status, r.bookCode || '', r.copyCode || '', r.assetId || '', r.bookTitle, r.edition, r.isbn,
+                r.userName, r.recipientName, r.phone, r.shippingAddress,
+                r.borrowedAt, r.dueDate, r.returnedAt || "尚未歸還"
+            ]);
+            downloadCsv("長庚科大專師甄審_借閱與歸檔對帳總表.csv", headers, rows);
+        };
+
+        window.openBookModal = function (bookId = null) {
+            const modal = document.getElementById('bookModal');
+            if (bookId) {
+                const b = state.books.find(x => x.bookId === bookId);
+                if (b) {
+                    document.getElementById('editBookId').value = b.bookId;
+                    document.getElementById('bookCodeInput').value = b.bookCode || '';
+                    document.getElementById('bookTitleInput').value = b.title;
+                    document.getElementById('bookEditionInput').value = b.edition;
+                    document.getElementById('bookAuthorInput').value = b.author;
+                    document.getElementById('bookIsbnInput').value = b.isbn;
+                    document.getElementById('bookSpecialtyInput').value = b.specialty;
+                    document.getElementById('bookLangInput').value = b.langType;
+                    document.getElementById('bookTotalCopiesInput').value = b.totalCopies;
+                    document.getElementById('bookIsOfficialRefInput').checked = Boolean(b.isOfficialRef);
+                    document.getElementById('bookSummaryInput').value = b.summary;
+                    document.getElementById('bookTagsInput').value = (b.tags || []).join(', ');
+                }
+            } else {
+                const nextIdx = String(state.books.length + 1).padStart(3, '0');
+                document.getElementById('editBookId').value = '';
+                document.getElementById('bookCodeInput').value = `NP-BK-${nextIdx}`;
+                document.getElementById('bookTitleInput').value = '';
+                document.getElementById('bookEditionInput').value = '最新版';
+                document.getElementById('bookAuthorInput').value = '';
+                document.getElementById('bookIsbnInput').value = '';
+                document.getElementById('bookTotalCopiesInput').value = 3;
+                document.getElementById('bookSummaryInput').value = '';
+                document.getElementById('bookTagsInput').value = '';
+                document.getElementById('bookIsOfficialRefInput').checked = true;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeBookModal = function () {
+            document.getElementById('bookModal').classList.add('hidden');
+            document.getElementById('bookModal').classList.remove('flex');
+        };
+
+        window.triggerGeminiAutofill = async function () {
+            const title = document.getElementById('bookTitleInput').value.trim();
+            const author = document.getElementById('bookAuthorInput').value.trim();
+            const specialty = document.getElementById('bookSpecialtyInput').value;
+            if (!title) {
+                showToast("請先輸入書名，再點擊 AI 自動補全！", "warning");
+                return;
+            }
+            const btn = document.getElementById('aiAutofillBtn');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i> <span>AI 產出中...</span>`;
+
+            try {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const prompt = `請針對專科護理師甄審命題參考書籍《${title}》（作者：${author || '未知'}，科別：${specialty}），以繁體中文生成約80字的命題重點摘要，以及3到4個檢索標籤，並回傳 JSON 格式：{"summary": "...", "tags": ["標籤1", "標籤2"]}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    const parsed = JSON.parse(text);
+                    document.getElementById('bookSummaryInput').value = parsed.summary || '';
+                    document.getElementById('bookTagsInput').value = (parsed.tags || []).join(', ');
+                    showToast("Gemini AI 已成功自動補全書籍摘要與分類標籤！", "success");
+                } else {
+                    throw new Error("Empty AI response");
+                }
+            } catch (err) {
+                document.getElementById('bookSummaryInput').value = `本書為《${title}》專科護理師甄審（${specialty}）核心命題參考用書，涵蓋進階病理生理評估、臨床診斷與實證照護指引。`;
+                document.getElementById('bookTagsInput').value = `${specialty}專師, 命題參考, 臨床指引`;
+                showToast("已自動啟用智慧範本填入摘要與標籤！", "info");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
+        };
+
+        window.handleBookSave = function (e) {
+            e.preventDefault();
+            const editId = document.getElementById('editBookId').value;
+            const bookCode = document.getElementById('bookCodeInput').value.trim();
+            const totalCopies = parseInt(document.getElementById('bookTotalCopiesInput').value, 10) || 1;
+            const assetPrefix = document.getElementById('bookAssetPrefixInput').value.trim() || 'CGUST-A';
+
+            if (editId) {
+                const idx = state.books.findIndex(b => b.bookId === editId);
+                if (idx > -1) {
+                    const existing = state.books[idx];
+                    existing.bookCode = bookCode;
+                    existing.title = document.getElementById('bookTitleInput').value.trim();
+                    existing.edition = document.getElementById('bookEditionInput').value.trim();
+                    existing.author = document.getElementById('bookAuthorInput').value.trim();
+                    existing.isbn = document.getElementById('bookIsbnInput').value.trim();
+                    existing.specialty = document.getElementById('bookSpecialtyInput').value;
+                    existing.langType = document.getElementById('bookLangInput').value;
+                    existing.isOfficialRef = document.getElementById('bookIsOfficialRefInput').checked;
+                    existing.summary = document.getElementById('bookSummaryInput').value.trim();
+                    existing.tags = document.getElementById('bookTagsInput').value.split(',').map(s => s.trim()).filter(Boolean);
+
+                    while (existing.copies.length < totalCopies) {
+                        const n = existing.copies.length + 1;
+                        existing.copies.push({
+                            copyCode: `${bookCode}-C${n}`,
+                            assetId: `${assetPrefix}${Math.floor(1000 + Math.random() * 8999)}`,
+                            status: 'AVAILABLE',
+                            borrowerName: null,
+                            borrowerEmail: null,
+                            borrowedAt: null
+                        });
+                    }
+                    recalcBookCopyCounts(existing);
+                    showToast(`已更新《[${bookCode}] ${existing.title}》資料！`, "success");
+                }
+            } else {
+                const copiesArr = [];
+                for (let i = 1; i <= totalCopies; i++) {
+                    copiesArr.push({
+                        copyCode: `${bookCode}-C${i}`,
+                        assetId: `${assetPrefix}${Math.floor(1000 + Math.random() * 8999)}`,
+                        status: 'AVAILABLE',
+                        borrowerName: null,
+                        borrowerEmail: null,
+                        borrowedAt: null
+                    });
+                }
+                const newBook = {
+                    bookId: 'bk-' + Date.now(),
+                    bookCode: bookCode,
+                    title: document.getElementById('bookTitleInput').value.trim(),
+                    edition: document.getElementById('bookEditionInput').value.trim(),
+                    author: document.getElementById('bookAuthorInput').value.trim(),
+                    isbn: document.getElementById('bookIsbnInput').value.trim(),
+                    specialty: document.getElementById('bookSpecialtyInput').value,
+                    langType: document.getElementById('bookLangInput').value,
+                    totalCopies: totalCopies,
+                    availableCopies: totalCopies,
+                    isOfficialRef: document.getElementById('bookIsOfficialRefInput').checked,
+                    summary: document.getElementById('bookSummaryInput').value.trim(),
+                    tags: document.getElementById('bookTagsInput').value.split(',').map(s => s.trim()).filter(Boolean),
+                    status: 'AVAILABLE',
+                    copies: copiesArr
+                };
+                state.books.unshift(newBook);
+                showToast(`已成功新增《[${bookCode}] ${newBook.title}》與 ${totalCopies} 筆單冊資產編號！`, "success");
+            }
+
+            window.closeBookModal();
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            renderMemberCatalog();
+        };
+
+        window.seedDemoData = function () {
+            state.books = JSON.parse(JSON.stringify(INITIAL_BOOKS));
+            updateStaffKpis();
+            window.renderStaffAllBooksView();
+            window.renderStaffInventoryView();
+            showToast("已重新載入預設館藏與單冊資產清單！", "success");
+        };
+
+        function downloadCsv(filename, headers, rows) {
+            const csvContent = "\uFEFF" + [headers, ...rows]
+                .map(row => row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`已成功匯出 ${filename}！`, "success");
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const colors = {
+                success: 'bg-emerald-600 text-white',
+                warning: 'bg-amber-500 text-slate-950',
+                error: 'bg-rose-600 text-white',
+                info: 'bg-slate-900 text-white'
+            };
+            const el = document.createElement('div');
+            el.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center justify-between gap-2 transition-all ${colors[type] || colors.info}`;
+            el.innerHTML = `<span>${escapeHtml(message)}</span>`;
+            container.appendChild(el);
+            setTimeout(() => {
+                el.remove();
+            }, 4200);
+        }
+
+        async function initApp() {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                isCloudReady = true;
+            } catch (e) {
+                isCloudReady = false;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
